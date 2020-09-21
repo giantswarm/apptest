@@ -7,7 +7,6 @@ import (
 
 	"github.com/giantswarm/apiextensions/v2/pkg/apis/application/v1alpha1"
 	"github.com/giantswarm/apiextensions/v2/pkg/label"
-	"github.com/giantswarm/appcatalog"
 	"github.com/giantswarm/backoff"
 	"github.com/giantswarm/k8sclient/v4/pkg/k8sclient"
 	"github.com/giantswarm/microerror"
@@ -113,11 +112,6 @@ func (a *AppSetup) createApps(ctx context.Context, apps []App) error {
 	for _, app := range apps {
 		a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("creating %#q app cr", app.Name))
 
-		version, err := appcatalog.GetLatestVersion(ctx, app.CatalogURL, app.Name, app.Version)
-		if err != nil {
-			return microerror.Mask(err)
-		}
-
 		appCR := &v1alpha1.App{
 			ObjectMeta: metav1.ObjectMeta{
 				Name:      app.Name,
@@ -134,7 +128,7 @@ func (a *AppSetup) createApps(ctx context.Context, apps []App) error {
 				},
 				Name:      app.Name,
 				Namespace: app.Namespace,
-				Version:   version,
+				Version:   app.Version,
 			},
 		}
 		_, err = a.k8sClient.G8sClient().ApplicationV1alpha1().Apps(namespace).Create(ctx, appCR, metav1.CreateOptions{})
