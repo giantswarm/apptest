@@ -109,6 +109,8 @@ func (a *AppSetup) createAppCatalogs(ctx context.Context, apps []App) error {
 }
 
 func (a *AppSetup) createApps(ctx context.Context, apps []App) error {
+	var err error
+
 	for _, app := range apps {
 		a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("creating %#q app cr", app.Name))
 
