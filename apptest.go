@@ -16,8 +16,9 @@ import (
 )
 
 const (
-	deployedStatus = "deployed"
-	namespace      = "giantswarm"
+	deployedStatus     = "deployed"
+	namespace          = "giantswarm"
+	uniqueAppCRVersion = "0.0.0"
 )
 
 // Config represents the configuration used to setup the apps.
@@ -83,7 +84,7 @@ func (a *AppSetup) createAppCatalogs(ctx context.Context, apps []App) error {
 				Name: app.CatalogName,
 				Labels: map[string]string{
 					// Processed by app-operator-unique.
-					label.AppOperatorVersion: "0.0.0",
+					label.AppOperatorVersion: uniqueAppCRVersion,
 				},
 			},
 			Spec: v1alpha1.AppCatalogSpec{
@@ -120,7 +121,7 @@ func (a *AppSetup) createApps(ctx context.Context, apps []App) error {
 				Namespace: app.Namespace,
 				Labels: map[string]string{
 					// Processed by app-operator-unique.
-					label.AppOperatorVersion: "0.0.0",
+					label.AppOperatorVersion: uniqueAppCRVersion,
 				},
 			},
 			Spec: v1alpha1.AppSpec{
