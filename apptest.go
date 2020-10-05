@@ -112,12 +112,12 @@ func (a *AppSetup) createAppCatalogs(ctx context.Context, apps []App) error {
 
 func (a *AppSetup) createApps(ctx context.Context, apps []App) error {
 	for _, app := range apps {
-		a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("creating %#q app cr", app.Name))
-
 		version, err := getAppVersion(ctx, app)
 		if err != nil {
 			return microerror.Mask(err)
 		}
+
+		a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("creating %#q app cr from catalog %#q with version %#q", app.Name, app.CatalogName, version))
 
 		appCR := &v1alpha1.App{
 			ObjectMeta: metav1.ObjectMeta{
@@ -200,12 +200,12 @@ func getAppVersion(ctx context.Context, app App) (version string, err error) {
 	if app.SHA == "" && app.Version != "" {
 		return app.Version, nil
 	} else if app.SHA != "" && app.Version == "" {
-		tag, err := appcatalog.GetLatestVersion(ctx, app.CatalogURL, app.Name, "")
+		version, err := appcatalog.GetLatestVersion(ctx, app.CatalogURL, app.Name, "")
 		if err != nil {
 			return "", microerror.Mask(err)
 		}
 
-		return fmt.Sprintf("%s-%s", tag, app.SHA), nil
+		return version, nil
 
 	} else if app.SHA != "" && app.Version != "" {
 		return "", microerror.Maskf(executionFailedError, "both SHA and Version cannot be provided")
