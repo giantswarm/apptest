@@ -202,6 +202,9 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, appName string) error
 // If a SHA was provided then we check the test catalog to get the latest version.
 // As for test catalogs the version format used is [latest version]-[sha].
 // e.g. 0.2.0-ad12c88111d7513114a1257994634e2ae81115a2
+//
+// If a version is provided then this is returned. This is to allow app
+// dependencies to be installed.
 func getVersionForApp(ctx context.Context, app App) (version string, err error) {
 	if app.SHA == "" && app.Version != "" {
 		return app.Version, nil
