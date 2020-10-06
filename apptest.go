@@ -112,7 +112,9 @@ func (a *AppSetup) createAppCatalogs(ctx context.Context, apps []App) error {
 
 func (a *AppSetup) createApps(ctx context.Context, apps []App) error {
 	for _, app := range apps {
-		version, err := getAppVersion(ctx, app)
+		// Get app version based on whether a commit SHA or a version was
+		// provided.
+		version, err := getVersionForApp(ctx, app)
 		if err != nil {
 			return microerror.Mask(err)
 		}
@@ -196,7 +198,11 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, appName string) error
 	return nil
 }
 
-func getAppVersion(ctx context.Context, app App) (version string, err error) {
+// getVersionForApp checks whether a commit SHA or a version was provided.
+// If a SHA was provided then we check the test catalog to get the latest version.
+// As for test catalogs the version format used is [latest version]-[sha].
+// e.g. 0.2.0-ad12c88111d7513114a1257994634e2ae81115a2
+func getVersionForApp(ctx context.Context, app App) (version string, err error) {
 	if app.SHA == "" && app.Version != "" {
 		return app.Version, nil
 	} else if app.SHA != "" && app.Version == "" {
@@ -206,7 +212,6 @@ func getAppVersion(ctx context.Context, app App) (version string, err error) {
 		}
 
 		return version, nil
-
 	} else if app.SHA != "" && app.Version != "" {
 		return "", microerror.Maskf(executionFailedError, "both SHA and Version cannot be provided")
 	}
