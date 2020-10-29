@@ -32,7 +32,7 @@ const (
 
 // Config represents the configuration used to setup the apps.
 type Config struct {
-	KubeConfig string
+	KubeConfigPath string
 
 	Logger micrologger.Logger
 }
@@ -48,7 +48,7 @@ type AppSetup struct {
 func New(config Config) (*AppSetup, error) {
 	var err error
 
-	if config.KubeConfig == "" {
+	if config.KubeConfigPath == "" {
 		return nil, microerror.Maskf(invalidConfigError, "%T.KubeConfig must not be empty", config)
 	}
 
@@ -58,8 +58,7 @@ func New(config Config) (*AppSetup, error) {
 
 	var restConfig *rest.Config
 	{
-		bytes := []byte(config.KubeConfig)
-		restConfig, err = clientcmd.RESTConfigFromKubeConfig(bytes)
+		restConfig, err = clientcmd.BuildConfigFromFlags("", config.KubeConfigPath)
 		if err != nil {
 			return nil, microerror.Mask(err)
 		}
