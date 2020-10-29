@@ -286,13 +286,13 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, appName string) error
 
 	a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("ensuring %#q app CR is %#q", appName, deployedStatus))
 
-	var app *v1alpha1.App
+	var app v1alpha1.App
 
 	o := func() error {
 		err = a.ctrlClient.Get(
 			ctx,
 			types.NamespacedName{Name: fmt.Sprintf("app.application.giantswarm.io/%s", appName), Namespace: namespace},
-			app)
+			&app)
 
 		a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("APP BEFORE %#v", app))
 
