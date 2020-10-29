@@ -2,9 +2,7 @@ package apptest
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"strconv"
 	"time"
 
 	v1alpha1 "github.com/giantswarm/apiextensions/v3/pkg/apis/application/v1alpha1"
@@ -289,7 +287,6 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, appName string) error
 	a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("ensuring %#q app CR is %#q", appName, deployedStatus))
 
 	var app v1alpha1.App
-	var loop int
 
 	o := func() error {
 		err = a.ctrlClient.Get(
@@ -303,34 +300,6 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, appName string) error
 			return microerror.Maskf(executionFailedError, "waiting for %#q, current %#q", deployedStatus, app.Status.Release.Status)
 		}
 
-		patches := []patch{}
-
-		if len(app.Annotations) == 0 {
-			patches = append(patches, patch{
-				Op:    "add",
-				Path:  "/metadata/annotations",
-				Value: map[string]string{},
-			})
-		}
-
-		patches = append(patches, patch{
-			Op:    "add",
-			Path:  "/metadata/annotations/apptest-refresh-loop",
-			Value: strconv.Itoa(loop),
-		})
-
-		bytes, err := json.Marshal(patches)
-		if err != nil {
-			return microerror.Mask(err)
-		}
-
-		err = a.ctrlClient.Patch(ctx, &app, client.RawPatch(types.JSONPatchType, bytes))
-		if err != nil {
-			return microerror.Mask(err)
-		}
-
-		loop++
-
 		return nil
 	}
 
@@ -338,7 +307,7 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, appName string) error
 		a.logger.Log("level", "debug", "message", fmt.Sprintf("failed to get app CR status '%s': retrying in %s", deployedStatus, t), "stack", fmt.Sprintf("%v", err))
 	}
 
-	b := backoff.NewConstant(20*time.Minute, 15*time.Second)
+	b := backoff.NewConstant(20*time.Minute, 30*time.Second)
 	err = backoff.RetryNotify(o, b, n)
 	if err != nil {
 		return microerror.Mask(err)
