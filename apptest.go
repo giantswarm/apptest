@@ -290,18 +290,20 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, appName string) error
 	var loop int
 
 	o := func() error {
-		if loop > 0 {
-			patch := []byte(fmt.Sprintf(`{"metadata":{"annotations":{"apptest-refresh-loop": %d}}}`, loop))
-			err = a.ctrlClient.Patch(ctx, &v1alpha1.App{
-				ObjectMeta: metav1.ObjectMeta{
-					Namespace: namespace,
-					Name:      appName,
-				},
-			}, client.RawPatch(types.StrategicMergePatchType, patch))
-			if err != nil {
-				return microerror.Mask(err)
-			}
+		a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("PATCHING APP CR LOOP %d", loop))
+
+		patch := []byte(fmt.Sprintf(`{"metadata":{"annotations":{"apptest-refresh-loop": %d}}}`, loop))
+		err = a.ctrlClient.Patch(ctx, &v1alpha1.App{
+			ObjectMeta: metav1.ObjectMeta{
+				Namespace: namespace,
+				Name:      appName,
+			},
+		}, client.RawPatch(types.StrategicMergePatchType, patch))
+		if err != nil {
+			return microerror.Mask(err)
 		}
+
+		a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("PATCHED APP CR LOOP %d", loop))
 
 		err = a.ctrlClient.Get(
 			ctx,
