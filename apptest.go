@@ -2,6 +2,7 @@ package apptest
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -290,21 +291,6 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, appName string) error
 	var loop int
 
 	o := func() error {
-		a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("PATCHING APP CR LOOP %d", loop))
-
-		patch := []byte(fmt.Sprintf(`{"metadata":{"annotations":{"apptest-refresh-loop": %d}}}`, loop))
-		err = a.ctrlClient.Patch(ctx, &v1alpha1.App{
-			ObjectMeta: metav1.ObjectMeta{
-				Namespace: namespace,
-				Name:      appName,
-			},
-		}, client.RawPatch(types.StrategicMergePatchType, patch))
-		if err != nil {
-			return microerror.Mask(err)
-		}
-
-		a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("PATCHED APP CR LOOP %d", loop))
-
 		err = a.ctrlClient.Get(
 			ctx,
 			types.NamespacedName{Name: appName, Namespace: namespace},
@@ -314,6 +300,39 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, appName string) error
 		}
 		if app.Status.Release.Status != deployedStatus {
 			return microerror.Maskf(executionFailedError, "waiting for %#q, current %#q", deployedStatus, app.Status.Release.Status)
+		}
+
+		if loop > 0 {
+			patches := []patch{}
+
+			if len(app.Annotations) == 0 {
+				patches = append(patches, patch{
+					Op:    "add",
+					Path:  "/metadata/annotations",
+					Value: map[string]string{},
+				})
+			}
+
+			patches = append(patches, patch{
+				Op:    "add",
+				Path:  "/metadata/annotations/apptest-refresh-loop",
+				Value: loop,
+			})
+
+			bytes, err := json.Marshal(patches)
+			if err != nil {
+				return microerror.Mask(err)
+			}
+
+			err = a.ctrlClient.Patch(ctx, &v1alpha1.App{
+				ObjectMeta: metav1.ObjectMeta{
+					Namespace: namespace,
+					Name:      appName,
+				},
+			}, client.RawPatch(types.JSONPatchType, bytes))
+			if err != nil {
+				return microerror.Mask(err)
+			}
 		}
 
 		loop++

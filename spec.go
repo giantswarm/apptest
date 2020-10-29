@@ -27,5 +27,11 @@ type App struct {
 	WaitForDeploy bool
 }
 
+type patch struct {
+	Op    string      `json:"op"`
+	Path  string      `json:"path"`
+	Value interface{} `json:"value"`
+}
+
 // schemeBuilder is used to extend the known types of the client-go scheme.
 type schemeBuilder []func(*runtime.Scheme) error
