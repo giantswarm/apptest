@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"time"
 
 	v1alpha1 "github.com/giantswarm/apiextensions/v3/pkg/apis/application/v1alpha1"
@@ -315,7 +316,7 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, appName string) error
 		patches = append(patches, patch{
 			Op:    "add",
 			Path:  "/metadata/annotations/apptest-refresh-loop",
-			Value: loop,
+			Value: strconv.Itoa(loop),
 		})
 
 		bytes, err := json.Marshal(patches)
