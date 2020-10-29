@@ -302,37 +302,35 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, appName string) error
 			return microerror.Maskf(executionFailedError, "waiting for %#q, current %#q", deployedStatus, app.Status.Release.Status)
 		}
 
-		if loop > 0 {
-			patches := []patch{}
+		patches := []patch{}
 
-			if len(app.Annotations) == 0 {
-				patches = append(patches, patch{
-					Op:    "add",
-					Path:  "/metadata/annotations",
-					Value: map[string]string{},
-				})
-			}
-
+		if len(app.Annotations) == 0 {
 			patches = append(patches, patch{
 				Op:    "add",
-				Path:  "/metadata/annotations/apptest-refresh-loop",
-				Value: loop,
+				Path:  "/metadata/annotations",
+				Value: map[string]string{},
 			})
+		}
 
-			bytes, err := json.Marshal(patches)
-			if err != nil {
-				return microerror.Mask(err)
-			}
+		patches = append(patches, patch{
+			Op:    "add",
+			Path:  "/metadata/annotations/apptest-refresh-loop",
+			Value: loop,
+		})
 
-			err = a.ctrlClient.Patch(ctx, &v1alpha1.App{
-				ObjectMeta: metav1.ObjectMeta{
-					Namespace: namespace,
-					Name:      appName,
-				},
-			}, client.RawPatch(types.JSONPatchType, bytes))
-			if err != nil {
-				return microerror.Mask(err)
-			}
+		bytes, err := json.Marshal(patches)
+		if err != nil {
+			return microerror.Mask(err)
+		}
+
+		err = a.ctrlClient.Patch(ctx, &v1alpha1.App{
+			ObjectMeta: metav1.ObjectMeta{
+				Namespace: namespace,
+				Name:      appName,
+			},
+		}, client.RawPatch(types.JSONPatchType, bytes))
+		if err != nil {
+			return microerror.Mask(err)
 		}
 
 		loop++
