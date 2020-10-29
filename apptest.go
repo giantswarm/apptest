@@ -287,8 +287,22 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, appName string) error
 	a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("ensuring %#q app CR is %#q", appName, deployedStatus))
 
 	var app v1alpha1.App
+	var loop int
 
 	o := func() error {
+		if loop > 0 {
+			patch := []byte(fmt.Sprintf(`{"metadata":{"annotations":{"apptest-refresh-loop": %d}}}`, loop))
+			err = a.ctrlClient.Patch(ctx, &v1alpha1.App{
+				ObjectMeta: metav1.ObjectMeta{
+					Namespace: namespace,
+					Name:      appName,
+				},
+			}, client.RawPatch(types.StrategicMergePatchType, patch))
+			if err != nil {
+				return microerror.Mask(err)
+			}
+		}
+
 		err = a.ctrlClient.Get(
 			ctx,
 			types.NamespacedName{Name: appName, Namespace: namespace},
@@ -300,6 +314,8 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, appName string) error
 			return microerror.Maskf(executionFailedError, "waiting for %#q, current %#q", deployedStatus, app.Status.Release.Status)
 		}
 
+		loop++
+
 		return nil
 	}
 
@@ -307,7 +323,7 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, appName string) error
 		a.logger.Log("level", "debug", "message", fmt.Sprintf("failed to get app CR status '%s': retrying in %s", deployedStatus, t), "stack", fmt.Sprintf("%v", err))
 	}
 
-	b := backoff.NewConstant(20*time.Minute, 60*time.Second)
+	b := backoff.NewConstant(20*time.Minute, 15*time.Second)
 	err = backoff.RetryNotify(o, b, n)
 	if err != nil {
 		return microerror.Mask(err)
