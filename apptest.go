@@ -323,12 +323,7 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, appName string) error
 			return microerror.Mask(err)
 		}
 
-		err = a.ctrlClient.Patch(ctx, &v1alpha1.App{
-			ObjectMeta: metav1.ObjectMeta{
-				Namespace: namespace,
-				Name:      appName,
-			},
-		}, client.RawPatch(types.JSONPatchType, bytes))
+		err = a.ctrlClient.Patch(ctx, &app, client.RawPatch(types.JSONPatchType, bytes))
 		if err != nil {
 			return microerror.Mask(err)
 		}
