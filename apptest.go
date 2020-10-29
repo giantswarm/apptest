@@ -293,15 +293,9 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, appName string) error
 			ctx,
 			types.NamespacedName{Name: appName, Namespace: namespace},
 			&app)
-
-		a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("APP BEFORE %#v", app))
-
 		if err != nil {
 			return microerror.Mask(err)
 		}
-
-		a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("APP AFTER %#v", app))
-
 		if app.Status.Release.Status != deployedStatus {
 			return microerror.Maskf(executionFailedError, "waiting for %#q, current %#q", deployedStatus, app.Status.Release.Status)
 		}
