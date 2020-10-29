@@ -296,9 +296,13 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, appName string) error
 		if err != nil {
 			return microerror.Mask(err)
 		}
-		if app.Status.Release.Status != deployedStatus {
+
+		a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("APP %#v", app))
+
+		if app != nil && app.Status.Release.Status != deployedStatus {
 			return microerror.Maskf(executionFailedError, "waiting for %#q, current %#q", deployedStatus, app.Status.Release.Status)
 		}
+
 		return nil
 	}
 
