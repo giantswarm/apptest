@@ -321,7 +321,7 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, appName string) error
 		a.logger.Log("level", "debug", "message", fmt.Sprintf("failed to get app CR status '%s': retrying in %s", deployedStatus, t), "stack", fmt.Sprintf("%v", err))
 	}
 
-	b := backoff.NewConstant(20*time.Minute, 30*time.Second)
+	b := backoff.NewConstant(20*time.Minute, 10*time.Second)
 	err = backoff.RetryNotify(o, b, n)
 	if err != nil {
 		return microerror.Mask(err)
