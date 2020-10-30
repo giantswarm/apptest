@@ -32,6 +32,7 @@ const (
 
 // Config represents the configuration used to setup the apps.
 type Config struct {
+	KubeConfig     string
 	KubeConfigPath string
 
 	Logger micrologger.Logger
@@ -48,8 +49,11 @@ type AppSetup struct {
 func New(config Config) (*AppSetup, error) {
 	var err error
 
-	if config.KubeConfigPath == "" {
-		return nil, microerror.Maskf(invalidConfigError, "%T.KubeConfig must not be empty", config)
+	if config.KubeConfig == "" && config.KubeConfigPath == "" {
+		return nil, microerror.Maskf(invalidConfigError, "%T.KubeConfig and %T.KubeConfigPath must not be empty at the same time", config, config)
+	}
+	if config.KubeConfig != "" && config.KubeConfigPath != "" {
+		return nil, microerror.Maskf(invalidConfigError, "%T.KubeConfig and %T.KubeConfigPath must not be set at the same time", config, config)
 	}
 
 	if config.Logger == nil {
@@ -58,9 +62,20 @@ func New(config Config) (*AppSetup, error) {
 
 	var restConfig *rest.Config
 	{
-		restConfig, err = clientcmd.BuildConfigFromFlags("", config.KubeConfigPath)
-		if err != nil {
-			return nil, microerror.Mask(err)
+		if config.KubeConfig != "" {
+			bytes := []byte(config.KubeConfig)
+			restConfig, err = clientcmd.RESTConfigFromKubeConfig(bytes)
+			if err != nil {
+				return nil, microerror.Mask(err)
+			}
+		} else if config.KubeConfigPath != "" {
+			restConfig, err = clientcmd.BuildConfigFromFlags("", config.KubeConfigPath)
+			if err != nil {
+				return nil, microerror.Mask(err)
+			}
+		} else {
+			// Shouldn't happen but returning error just in case.
+			return nil, microerror.Maskf(invalidConfigError, "%T.KubeConfig and %T.KubeConfigPath must not be empty at the same time", config, config)
 		}
 	}
 
