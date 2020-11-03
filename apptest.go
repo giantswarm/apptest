@@ -37,6 +37,7 @@ type Config struct {
 	KubeConfigPath string
 
 	Logger micrologger.Logger
+	Scheme *runtime.Scheme
 }
 
 // AppSetup implements the logic for managing the app setup.
@@ -82,6 +83,10 @@ func New(config Config) (*AppSetup, error) {
 
 	var ctrlClient client.Client
 	{
+		if config.Scheme == nil {
+			config.Scheme = scheme.Scheme
+		}
+
 		// Extend the global client-go scheme which is used by all the tools under
 		// the hood. The scheme is required for the controller-runtime controller to
 		// be able to watch for runtime objects of a certain type.
@@ -89,7 +94,7 @@ func New(config Config) (*AppSetup, error) {
 			v1alpha1.AddToScheme,
 			apiextensionsv1.AddToScheme,
 		})
-		err = appSchemeBuilder.AddToScheme(scheme.Scheme)
+		err = appSchemeBuilder.AddToScheme(config.Scheme)
 		if err != nil {
 			return nil, microerror.Mask(err)
 		}
@@ -106,7 +111,7 @@ func New(config Config) (*AppSetup, error) {
 			return nil, microerror.Mask(err)
 		}
 
-		ctrlClient, err = client.New(rest.CopyConfig(restConfig), client.Options{Scheme: scheme.Scheme, Mapper: mapper})
+		ctrlClient, err = client.New(rest.CopyConfig(restConfig), client.Options{Scheme: config.Scheme, Mapper: mapper})
 		if err != nil {
 			return nil, microerror.Mask(err)
 		}
