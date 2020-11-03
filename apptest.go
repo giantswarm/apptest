@@ -12,6 +12,7 @@ import (
 	"github.com/giantswarm/microerror"
 	"github.com/giantswarm/micrologger"
 	corev1 "k8s.io/api/core/v1"
+	v1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -147,6 +148,18 @@ func (a *AppSetup) InstallApps(ctx context.Context, apps []App) error {
 	err = a.waitForDeployedApps(ctx, apps)
 	if err != nil {
 		return microerror.Mask(err)
+	}
+
+	return nil
+}
+
+func (a *AppSetup) EnsureCRDs(ctx context.Context, crds []*v1.CustomResourceDefinition) error {
+	var err error
+	for _, crd := range crds {
+		err = a.ctrlClient.Create(ctx, crd)
+		if err != nil {
+			return microerror.Mask(err)
+		}
 	}
 
 	return nil
