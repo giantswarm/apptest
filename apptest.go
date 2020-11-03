@@ -154,6 +154,7 @@ func (a *AppSetup) InstallApps(ctx context.Context, apps []App) error {
 	return nil
 }
 
+// EnsureCRDs will register the passed CRDs in the k8s API used by the client.
 func (a *AppSetup) EnsureCRDs(ctx context.Context, crds []*apiextensionsv1.CustomResourceDefinition) error {
 	var err error
 	for _, crd := range crds {
