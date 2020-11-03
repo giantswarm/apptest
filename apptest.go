@@ -177,6 +177,11 @@ func (a *AppSetup) K8sClient() kubernetes.Interface {
 	return a.k8sClient
 }
 
+// CtrlClient returns a controller-runtime client for use in automated tests.
+func (a *AppSetup) CtrlClient() client.Client {
+	return a.ctrlClient
+}
+
 func (a *AppSetup) createAppCatalogs(ctx context.Context, apps []App) error {
 	var err error
 
