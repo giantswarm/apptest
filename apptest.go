@@ -12,7 +12,7 @@ import (
 	"github.com/giantswarm/microerror"
 	"github.com/giantswarm/micrologger"
 	corev1 "k8s.io/api/core/v1"
-	v1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
+	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -87,6 +87,7 @@ func New(config Config) (*AppSetup, error) {
 		// be able to watch for runtime objects of a certain type.
 		appSchemeBuilder := runtime.SchemeBuilder(schemeBuilder{
 			v1alpha1.AddToScheme,
+			apiextensionsv1.AddToScheme,
 		})
 		err = appSchemeBuilder.AddToScheme(scheme.Scheme)
 		if err != nil {
@@ -153,7 +154,7 @@ func (a *AppSetup) InstallApps(ctx context.Context, apps []App) error {
 	return nil
 }
 
-func (a *AppSetup) EnsureCRDs(ctx context.Context, crds []*v1.CustomResourceDefinition) error {
+func (a *AppSetup) EnsureCRDs(ctx context.Context, crds []*apiextensionsv1.CustomResourceDefinition) error {
 	var err error
 	for _, crd := range crds {
 		err = a.ctrlClient.Create(ctx, crd)
