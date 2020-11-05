@@ -31,6 +31,23 @@ const (
 	uniqueAppCRVersion = "0.0.0"
 )
 
+var (
+	giantSwarmCatalogs = []string{
+		"control-plane-catalog",
+		"control-plane-test-catalog",
+		"default",
+		"default-test",
+		"giantswarm",
+		"giantswarm-test",
+		"giantswarm-operations-platform",
+		"giantswarm-operations-platform-test",
+		"giantswarm-playground",
+		"giantswarm-playground-test",
+		"releases",
+		"releases-test",
+	}
+)
+
 // Config represents the configuration used to setup the apps.
 type Config struct {
 	KubeConfig     string
@@ -183,9 +200,12 @@ func (a *AppSetup) CtrlClient() client.Client {
 }
 
 func (a *AppSetup) createAppCatalogs(ctx context.Context, apps []App) error {
-	var err error
-
 	for _, app := range apps {
+		catalogURL, err := getCatalogURL(app)
+		if err != nil {
+			return microerror.Mask(err)
+		}
+
 		a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("creating %#q appcatalog cr", app.CatalogName))
 
 		appCatalogCR := &v1alpha1.AppCatalog{
@@ -201,7 +221,7 @@ func (a *AppSetup) createAppCatalogs(ctx context.Context, apps []App) error {
 				Title:       app.CatalogName,
 				Storage: v1alpha1.AppCatalogSpecStorage{
 					Type: "helm",
-					URL:  app.CatalogURL,
+					URL:  catalogURL,
 				},
 			},
 		}
@@ -355,6 +375,25 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, appName string) error
 	a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("ensured %#q app CR is deployed", appName))
 
 	return nil
+}
+
+// getCatalogURL returns the catalog URL for this app. If it is a Giant Swarm
+// catalog no URL needs to be provided.
+func getCatalogURL(app App) (string, error) {
+	if app.CatalogName == "" {
+		return "", microerror.Maskf(invalidConfigError, "catalog name must not be empty for app %#v", app)
+	}
+	if app.CatalogName != "" && app.CatalogURL != "" {
+		return app.CatalogURL, nil
+	}
+
+	for _, catalog := range giantSwarmCatalogs {
+		if app.CatalogName == catalog {
+			return fmt.Sprintf("https://giantswarm.github.io/%s/", app.CatalogName), nil
+		}
+	}
+
+	return "", microerror.Maskf(invalidConfigError, "catalog %#q not found and no URL provided", app.CatalogName)
 }
 
 // getVersionForApp checks whether a commit SHA or a version was provided.
