@@ -3,8 +3,6 @@ package apptest
 import (
 	"context"
 	"fmt"
-	"net/url"
-	"path"
 	"time"
 
 	v1alpha1 "github.com/giantswarm/apiextensions/v3/pkg/apis/application/v1alpha1"
@@ -35,19 +33,20 @@ const (
 )
 
 var (
-	giantSwarmCatalogs = []string{
-		"control-plane-catalog",
-		"control-plane-test-catalog",
-		"default",
-		"default-test",
-		"giantswarm",
-		"giantswarm-test",
-		"giantswarm-operations-platform",
-		"giantswarm-operations-platform-test",
-		"giantswarm-playground",
-		"giantswarm-playground-test",
-		"releases",
-		"releases-test",
+	giantSwarmCatalogs = map[string]string{
+		"control-plane-catalog":               "https://giantswarm.github.io/control-plane-catalog/",
+		"control-plane-test-catalog":          "https://giantswarm.github.io/control-plane-test-catalog/",
+		"default":                             "https://giantswarm.github.io/default-catalog/",
+		"default-test":                        "https://giantswarm.github.io/default-test-catalog/",
+		"giantswarm":                          "https://giantswarm.github.io/giantswarm-catalog/",
+		"giantswarm-test":                     "https://giantswarm.github.io/giantswarm-test-catalog/",
+		"giantswarm-operations-platform":      "https://giantswarm.github.io/giantswarm-operations-platform-catalog/",
+		"giantswarm-operations-platform-test": "https://giantswarm.github.io/giantswarm-operations-platform-test-catalog/",
+		"giantswarm-playground":               "https://giantswarm.github.io/giantswarm-playground-catalog/",
+		"giantswarm-playground-test":          "https://giantswarm.github.io/giantswarm-playground-test-catalog/",
+		"helm-stable":                         "https://charts.helm.sh/stable/packages/",
+		"releases":                            "https://giantswarm.github.io/releases-catalog/",
+		"releases-test":                       "https://giantswarm.github.io/releases-test-catalog/",
 	}
 )
 
@@ -390,19 +389,12 @@ func getCatalogURL(app App) (string, error) {
 		return app.CatalogURL, nil
 	}
 
-	for _, catalog := range giantSwarmCatalogs {
-		if app.CatalogName == catalog {
-			u, err := url.Parse(catalogBaseURL)
-			if err != nil {
-				return "", microerror.Mask(err)
-			}
-			u.Path = path.Join(u.Path, app.CatalogName)
-
-			return u.String(), nil
-		}
+	catalogURL, exists := giantSwarmCatalogs[app.CatalogName]
+	if !exists {
+		return "", microerror.Maskf(invalidConfigError, "catalog %#q not found and no URL provided", app.CatalogName)
 	}
 
-	return "", microerror.Maskf(invalidConfigError, "catalog %#q not found and no URL provided", app.CatalogName)
+	return catalogURL, nil
 }
 
 // getVersionForApp checks whether a commit SHA or a version was provided.
