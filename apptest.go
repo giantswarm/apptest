@@ -413,10 +413,15 @@ func getCatalogURL(app App) (string, error) {
 // If a version is provided then this is returned. This is to allow app
 // dependencies to be installed.
 func getVersionForApp(ctx context.Context, app App) (version string, err error) {
+	catalogURL, err := getCatalogURL(app)
+	if err != nil {
+		return "", microerror.Mask(err)
+	}
+
 	if app.SHA == "" && app.Version != "" {
 		return app.Version, nil
 	} else if app.SHA != "" && app.Version == "" {
-		version, err := appcatalog.GetLatestVersion(ctx, app.CatalogURL, app.Name, "")
+		version, err := appcatalog.GetLatestVersion(ctx, catalogURL, app.Name, "")
 		if err != nil {
 			return "", microerror.Mask(err)
 		}
