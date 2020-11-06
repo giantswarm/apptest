@@ -26,7 +26,6 @@ import (
 )
 
 const (
-	catalogBaseURL     = "https://giantswarm.github.io/"
 	deployedStatus     = "deployed"
 	namespace          = "giantswarm"
 	uniqueAppCRVersion = "0.0.0"
