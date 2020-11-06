@@ -3,6 +3,8 @@ package apptest
 import (
 	"context"
 	"fmt"
+	"net/url"
+	"path"
 	"time"
 
 	v1alpha1 "github.com/giantswarm/apiextensions/v3/pkg/apis/application/v1alpha1"
@@ -26,6 +28,7 @@ import (
 )
 
 const (
+	catalogBaseURL     = "https://giantswarm.github.io/"
 	deployedStatus     = "deployed"
 	namespace          = "giantswarm"
 	uniqueAppCRVersion = "0.0.0"
@@ -389,7 +392,13 @@ func getCatalogURL(app App) (string, error) {
 
 	for _, catalog := range giantSwarmCatalogs {
 		if app.CatalogName == catalog {
-			return fmt.Sprintf("https://giantswarm.github.io/%s/", app.CatalogName), nil
+			u, err := url.Parse(catalogBaseURL)
+			if err != nil {
+				return "", microerror.Mask(err)
+			}
+			u.Path = path.Join(u.Path, app.CatalogName)
+
+			return u.String(), nil
 		}
 	}
 
