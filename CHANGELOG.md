@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Install specified app version instead of latest when passing the `SHA` parameter.
 
+### Changed
+
+- Updated `appcatalog` library.
+
 ## [0.6.0] - 2020-11-12
 
 ### Changed
