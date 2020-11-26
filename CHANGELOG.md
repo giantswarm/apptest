@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.7.1] - 2020-11-26
 
+### Fixed
+
+- Comparing `SHA` parameter with either app version or version.
+
 ## [0.7.0] - 2020-11-17
 
 ### Fixed
