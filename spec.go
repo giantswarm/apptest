@@ -27,6 +27,7 @@ type Interface interface {
 type App struct {
 	CatalogName   string
 	CatalogURL    string
+	KubeConfig    string
 	Name          string
 	Namespace     string
 	SHA           string
