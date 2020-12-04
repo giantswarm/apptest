@@ -250,6 +250,25 @@ func (a *AppSetup) createApps(ctx context.Context, apps []App) error {
 			return microerror.Mask(err)
 		}
 
+		a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("creating %#q app cr from catalog %#q with version %#q", app.Name, app.CatalogName, version))
+
+		var appOperatorVersion string
+
+		if app.AppOperatorVersion != "" {
+			appOperatorVersion = app.AppOperatorVersion
+		} else {
+			// Processed by app-operator-unique instance.
+			appOperatorVersion = uniqueAppCRVersion
+		}
+
+		var appCRNamespace string
+
+		if app.AppCRNamespace != "" {
+			appCRNamespace = app.AppCRNamespace
+		} else {
+			appCRNamespace = namespace
+		}
+
 		var kubeConfig v1alpha1.AppSpecKubeConfig
 
 		if app.KubeConfig != "" {
@@ -286,16 +305,12 @@ func (a *AppSetup) createApps(ctx context.Context, apps []App) error {
 				return microerror.Mask(err)
 			}
 		}
-
-		a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("creating %#q app cr from catalog %#q with version %#q", app.Name, app.CatalogName, version))
-
 		appCR := &v1alpha1.App{
 			ObjectMeta: metav1.ObjectMeta{
 				Name:      app.Name,
-				Namespace: namespace,
+				Namespace: appCRNamespace,
 				Labels: map[string]string{
-					// Processed by app-operator-unique.
-					label.AppOperatorVersion: uniqueAppCRVersion,
+					label.AppOperatorVersion: appOperatorVersion,
 				},
 			},
 			Spec: v1alpha1.AppSpec{
