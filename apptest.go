@@ -347,7 +347,7 @@ func (a *AppSetup) createKubeConfigSecret(ctx context.Context, name, namespace, 
 	data := map[string][]byte{
 		"kubeConfig": []byte(kubeConfig),
 	}
-	secret := &corev1.Secret{
+	desired := &corev1.Secret{
 		Data: data,
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
@@ -355,13 +355,21 @@ func (a *AppSetup) createKubeConfigSecret(ctx context.Context, name, namespace, 
 		},
 	}
 
-	_, err := a.k8sClient.CoreV1().Secrets(namespace).Create(ctx, secret, metav1.CreateOptions{})
-	if apierrors.IsAlreadyExists(err) {
-		a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("already created secret %#q", name))
-	} else if err != nil {
-		return microerror.Mask(err)
-	} else {
+	_, err := a.k8sClient.CoreV1().Secrets(namespace).Get(ctx, name, metav1.GetOptions{})
+	if apierrors.IsNotFound(err) {
+		_, err := a.k8sClient.CoreV1().Secrets(namespace).Create(ctx, desired, metav1.CreateOptions{})
+		if err != nil {
+			return microerror.Mask(err)
+		}
+
 		a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("created secret %#q", name))
+	} else {
+		_, err := a.k8sClient.CoreV1().Secrets(namespace).Update(ctx, desired, metav1.UpdateOptions{})
+		if err != nil {
+			return microerror.Mask(err)
+		}
+
+		a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("updated existing secret %#q", name))
 	}
 
 	return nil
