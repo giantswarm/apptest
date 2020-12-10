@@ -404,7 +404,7 @@ func (a *AppSetup) createUserValuesConfigMap(ctx context.Context, name, namespac
 func (a *AppSetup) waitForDeployedApps(ctx context.Context, apps []App) error {
 	for _, app := range apps {
 		if app.WaitForDeploy {
-			err := a.waitForDeployedApp(ctx, app.Name)
+			err := a.waitForDeployedApp(ctx, app)
 			if err != nil {
 				return microerror.Mask(err)
 			}
@@ -416,17 +416,17 @@ func (a *AppSetup) waitForDeployedApps(ctx context.Context, apps []App) error {
 	return nil
 }
 
-func (a *AppSetup) waitForDeployedApp(ctx context.Context, appName string) error {
+func (a *AppSetup) waitForDeployedApp(ctx context.Context, testApp App) error {
 	var err error
 
-	a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("ensuring %#q app CR is %#q", appName, deployedStatus))
+	a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("ensuring %#q app CR is %#q", testApp.Name, deployedStatus))
 
 	var app v1alpha1.App
 
 	o := func() error {
 		err = a.ctrlClient.Get(
 			ctx,
-			types.NamespacedName{Name: appName, Namespace: namespace},
+			types.NamespacedName{Name: testApp.Name, Namespace: testApp.AppCRNamespace},
 			&app)
 		if err != nil {
 			return microerror.Mask(err)
@@ -448,7 +448,7 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, appName string) error
 		return microerror.Mask(err)
 	}
 
-	a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("ensured %#q app CR is deployed", appName))
+	a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("ensured %#q app CR is deployed", testApp.Name))
 
 	return nil
 }
