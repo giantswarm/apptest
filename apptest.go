@@ -183,6 +183,8 @@ func (a *AppSetup) UpgradeApp(ctx context.Context, app App) error {
 	var err error
 	var currentApp v1alpha1.App
 
+	a.logger.Debugf(ctx, "finding %#q app from current deployments", app.Name)
+
 	// 1. Find app CR
 	err = a.ctrlClient.Get(
 		ctx,
@@ -192,18 +194,23 @@ func (a *AppSetup) UpgradeApp(ctx context.Context, app App) error {
 		return microerror.Mask(err)
 	}
 
+	a.logger.Debugf(ctx, "found %#q app from current deployments", app.Name)
+
 	desiredApp := currentApp.DeepCopy()
 
 	// 2. Put the desired version.
 	desiredApp.Spec.Version = app.Version
 	desiredApp.Spec.Catalog = app.CatalogName
 
+	a.logger.Debugf(ctx, "updating %#q app cr from catalog %#q", app.Name, app.CatalogName)
 	err = a.ctrlClient.Update(
 		ctx,
 		desiredApp)
 	if err != nil {
 		return microerror.Mask(err)
 	}
+
+	a.logger.Debugf(ctx, "updated %#q app cr from catalog %#q", app.Name, app.CatalogName)
 
 	// 3. check if it's deployed
 	err = a.waitForDeployedApp(ctx, app)
