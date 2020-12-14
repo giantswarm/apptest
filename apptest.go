@@ -185,10 +185,18 @@ func (a *AppSetup) UpgradeApp(ctx context.Context, app App) error {
 
 	a.logger.Debugf(ctx, "finding %#q app from current deployments", app.Name)
 
+	var appCRNamespace string
+
+	if app.AppCRNamespace != "" {
+		appCRNamespace = app.AppCRNamespace
+	} else {
+		appCRNamespace = defaultNamespace
+	}
+
 	// 1. Find app CR
 	err = a.ctrlClient.Get(
 		ctx,
-		types.NamespacedName{Name: app.Name, Namespace: app.AppCRNamespace},
+		types.NamespacedName{Name: app.Name, Namespace: appCRNamespace},
 		&currentApp)
 	if err != nil {
 		return microerror.Mask(err)
@@ -202,7 +210,7 @@ func (a *AppSetup) UpgradeApp(ctx context.Context, app App) error {
 	desiredApp.Spec.Version = app.Version
 	desiredApp.Spec.Catalog = app.CatalogName
 
-	a.logger.Debugf(ctx, "updating %#q app cr from catalog %#q", app.Name, app.CatalogName)
+	a.logger.Debugf(ctx, "updating %#q app cr from catalog %#q", app.Name, appCRNamespace)
 	err = a.ctrlClient.Update(
 		ctx,
 		desiredApp)
