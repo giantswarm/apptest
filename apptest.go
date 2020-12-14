@@ -556,6 +556,8 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, testApp App) error {
 			if testApp.Version != "" && testApp.Version == app.Status.Version {
 				return nil
 			}
+
+			return microerror.Maskf(executionFailedError, "waiting for version %#q , current version %#q", app.Spec.Version, app.Status.Version)
 		}
 
 		return microerror.Maskf(executionFailedError, "waiting for %#q, current %#q", deployedStatus, app.Status.Release.Status)
