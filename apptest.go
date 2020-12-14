@@ -529,19 +529,16 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, testApp App) error {
 			return microerror.Mask(err)
 		}
 
-		if app.Status.Version != testApp.Version {
-			return microerror.Maskf(executionFailedError, "app %#q with version %#q is not deployed yet; current version: %s", app.Name, testApp.Version, app.Status.Version)
-		}
-
 		switch app.Status.Release.Status {
 		case notInstallStatus, failedStatus:
 			return backoff.Permanent(microerror.Maskf(executionFailedError, "status %#q, reason: %s", app.Status.Release.Status, app.Status.Release.Reason))
 		case deployedStatus:
-			// no-op
-			return nil
-		default:
-			return microerror.Maskf(executionFailedError, "waiting for %#q, current %#q", deployedStatus, app.Status.Release.Status)
+			if app.Status.Version == testApp.Version {
+				return nil
+			}
 		}
+
+		return microerror.Maskf(executionFailedError, "waiting for %#q, current %#q", deployedStatus, app.Status.Release.Status)
 	}
 
 	n := func(err error, t time.Duration) {
