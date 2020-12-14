@@ -179,7 +179,7 @@ func (a *AppSetup) InstallApps(ctx context.Context, apps []App) error {
 	return nil
 }
 
-func (a *AppSetup) UpgradeApps(ctx context.Context, app App) error {
+func (a *AppSetup) UpgradeApp(ctx context.Context, app App) error {
 	var err error
 	var currentApp v1alpha1.App
 
