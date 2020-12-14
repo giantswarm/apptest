@@ -27,6 +27,8 @@ import (
 
 const (
 	deployedStatus     = "deployed"
+	failedStatus       = "failed"
+	notInstallStatus   = "not-installed"
 	defaultNamespace   = "giantswarm"
 	uniqueAppCRVersion = "0.0.0"
 )
@@ -170,6 +172,41 @@ func (a *AppSetup) InstallApps(ctx context.Context, apps []App) error {
 	}
 
 	err = a.waitForDeployedApps(ctx, apps)
+	if err != nil {
+		return microerror.Mask(err)
+	}
+
+	return nil
+}
+
+func (a *AppSetup) UpgradeApps(ctx context.Context, app App) error {
+	var err error
+	var currentApp v1alpha1.App
+
+	// 1. Find app CR
+	err = a.ctrlClient.Get(
+		ctx,
+		types.NamespacedName{Name: app.Name, Namespace: app.AppCRNamespace},
+		&currentApp)
+	if err != nil {
+		return microerror.Mask(err)
+	}
+
+	desiredApp := currentApp.DeepCopy()
+
+	// 2. Put the desired version.
+	desiredApp.Spec.Version = app.Version
+	desiredApp.Spec.Catalog = app.CatalogName
+
+	err = a.ctrlClient.Update(
+		ctx,
+		desiredApp)
+	if err != nil {
+		return microerror.Mask(err)
+	}
+
+	// 3. check if it's deployed
+	err = a.waitForDeployedApp(ctx, app)
 	if err != nil {
 		return microerror.Mask(err)
 	}
@@ -491,11 +528,20 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, testApp App) error {
 		if err != nil {
 			return microerror.Mask(err)
 		}
-		if app.Status.Release.Status != deployedStatus {
-			return microerror.Maskf(executionFailedError, "waiting for %#q, current %#q", deployedStatus, app.Status.Release.Status)
+
+		if app.Status.Version != testApp.Version {
+			return microerror.Maskf(executionFailedError, "app %#q with version %#q is not deployed yet; current version: %s", app.Name, testApp.Version, app.Status.Version)
 		}
 
-		return nil
+		switch app.Status.Release.Status {
+		case notInstallStatus, failedStatus:
+			return backoff.Permanent(microerror.Maskf(executionFailedError, "status %#q, reason: %s", app.Status.Release.Status, app.Status.Release.Reason))
+		case deployedStatus:
+			// no-op
+			return nil
+		default:
+			return microerror.Maskf(executionFailedError, "waiting for %#q, current %#q", deployedStatus, app.Status.Release.Status)
+		}
 	}
 
 	n := func(err error, t time.Duration) {
