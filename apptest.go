@@ -224,7 +224,7 @@ func (a *AppSetup) UpgradeApp(ctx context.Context, current, desired App) error {
 
 	a.logger.Debugf(ctx, "finding %#q app from current deployments", currentApp.Name)
 
-	// 1. Find app CR
+	// 1. Find app CR.
 	err = a.ctrlClient.Get(
 		ctx,
 		types.NamespacedName{Name: current.Name, Namespace: appCRNamespace},
@@ -238,7 +238,27 @@ func (a *AppSetup) UpgradeApp(ctx context.Context, current, desired App) error {
 	desiredApp := currentApp.DeepCopy()
 
 	// 2. Put the desired version.
-	desiredApp.Spec.Version = desired.Version
+	{
+		catalogURL, err := getCatalogURL(desired)
+		if err != nil {
+			return microerror.Mask(err)
+		}
+
+		var appVersion string
+		if desired.SHA != "" {
+			appVersion = desired.SHA
+		} else {
+			appVersion = desired.Version
+		}
+
+		version, err := appcatalog.GetLatestVersion(ctx, catalogURL, current.Name, appVersion)
+		if err != nil {
+			return microerror.Mask(err)
+		}
+
+		desiredApp.Spec.Version = version
+	}
+
 	desiredApp.Spec.Catalog = desired.CatalogName
 
 	a.logger.Debugf(ctx, "updating %#q app cr in namespace %#q", currentApp.Name, appCRNamespace)
@@ -251,7 +271,7 @@ func (a *AppSetup) UpgradeApp(ctx context.Context, current, desired App) error {
 
 	a.logger.Debugf(ctx, "updated %#q app cr in namespace %#q", currentApp.Name, appCRNamespace)
 
-	// 3. check if it's deployed
+	// 3. check if it's updated.
 	err = a.waitForDeployedApp(ctx, desired)
 	if err != nil {
 		return microerror.Mask(err)
@@ -587,7 +607,14 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, testApp App) error {
 				return nil
 			}
 
-			return microerror.Maskf(executionFailedError, "waiting for version %#q , current version %#q", app.Spec.Version, app.Status.Version)
+			var appVersion string
+			if testApp.SHA != "" {
+				appVersion = testApp.SHA
+			} else {
+				appVersion = testApp.Version
+			}
+
+			return microerror.Maskf(executionFailedError, "waiting for version %#q, current version %#q", appVersion, app.Status.Version)
 		}
 
 		return microerror.Maskf(executionFailedError, "waiting for %#q, current %#q", deployedStatus, app.Status.Release.Status)
