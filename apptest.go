@@ -180,38 +180,68 @@ func (a *AppSetup) InstallApps(ctx context.Context, apps []App) error {
 	return nil
 }
 
-func (a *AppSetup) UpgradeApp(ctx context.Context, app App) error {
+func (a *AppSetup) UpgradeApp(ctx context.Context, current, desired App) error {
 	var err error
 	var currentApp v1alpha1.App
 
-	a.logger.Debugf(ctx, "finding %#q app from current deployments", app.Name)
+	err = a.createAppCatalogs(ctx, []App{current, desired})
+	if err != nil {
+		return microerror.Mask(err)
+	}
+
+	//if current version have no specific version, use the latest
+	if current.Version == "" && current.SHA == "" {
+		catalogURL, err := getCatalogURL(current)
+		if err != nil {
+			return microerror.Mask(err)
+		}
+
+		version, err := appcatalog.GetLatestVersion(ctx, catalogURL, current.Name, "")
+		if err != nil {
+			return microerror.Mask(err)
+		}
+
+		current.Version = version
+	}
+
+	err = a.createApps(ctx, []App{current})
+	if err != nil {
+		return microerror.Mask(err)
+	}
+
+	err = a.waitForDeployedApps(ctx, []App{current})
+	if err != nil {
+		return microerror.Mask(err)
+	}
 
 	var appCRNamespace string
 
-	if app.AppCRNamespace != "" {
-		appCRNamespace = app.AppCRNamespace
+	if current.AppCRNamespace != "" {
+		appCRNamespace = current.AppCRNamespace
 	} else {
 		appCRNamespace = defaultNamespace
 	}
 
+	a.logger.Debugf(ctx, "finding %#q app from current deployments", currentApp.Name)
+
 	// 1. Find app CR
 	err = a.ctrlClient.Get(
 		ctx,
-		types.NamespacedName{Name: app.Name, Namespace: appCRNamespace},
+		types.NamespacedName{Name: current.Name, Namespace: appCRNamespace},
 		&currentApp)
 	if err != nil {
 		return microerror.Mask(err)
 	}
 
-	a.logger.Debugf(ctx, "found %#q app from current deployments", app.Name)
+	a.logger.Debugf(ctx, "found %#q app from current deployments", currentApp.Name)
 
 	desiredApp := currentApp.DeepCopy()
 
 	// 2. Put the desired version.
-	desiredApp.Spec.Version = app.Version
-	desiredApp.Spec.Catalog = app.CatalogName
+	desiredApp.Spec.Version = desired.Version
+	desiredApp.Spec.Catalog = desired.CatalogName
 
-	a.logger.Debugf(ctx, "updating %#q app cr from catalog %#q", app.Name, appCRNamespace)
+	a.logger.Debugf(ctx, "updating %#q app cr in namespace %#q", currentApp.Name, appCRNamespace)
 	err = a.ctrlClient.Update(
 		ctx,
 		desiredApp)
@@ -219,10 +249,10 @@ func (a *AppSetup) UpgradeApp(ctx context.Context, app App) error {
 		return microerror.Mask(err)
 	}
 
-	a.logger.Debugf(ctx, "updated %#q app cr from catalog %#q", app.Name, app.CatalogName)
+	a.logger.Debugf(ctx, "updated %#q app cr in namespace %#q", currentApp.Name, appCRNamespace)
 
 	// 3. check if it's deployed
-	err = a.waitForDeployedApp(ctx, app)
+	err = a.waitForDeployedApp(ctx, desired)
 	if err != nil {
 		return microerror.Mask(err)
 	}
