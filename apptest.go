@@ -3,6 +3,7 @@ package apptest
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	v1alpha1 "github.com/giantswarm/apiextensions/v3/pkg/apis/application/v1alpha1"
@@ -548,7 +549,11 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, testApp App) error {
 		case notInstallStatus, failedStatus:
 			return backoff.Permanent(microerror.Maskf(executionFailedError, "status %#q, reason: %s", app.Status.Release.Status, app.Status.Release.Reason))
 		case deployedStatus:
-			if app.Status.Version == testApp.Version {
+			if testApp.SHA != "" && strings.HasSuffix(app.Status.Version, testApp.SHA) {
+				return nil
+			}
+
+			if testApp.Version != "" && testApp.Version == app.Status.Version {
 				return nil
 			}
 		}
