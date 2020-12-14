@@ -182,14 +182,13 @@ func (a *AppSetup) InstallApps(ctx context.Context, apps []App) error {
 
 func (a *AppSetup) UpgradeApp(ctx context.Context, current, desired App) error {
 	var err error
-	var currentApp v1alpha1.App
 
 	err = a.createAppCatalogs(ctx, []App{current, desired})
 	if err != nil {
 		return microerror.Mask(err)
 	}
 
-	//if current version have no specific version, use the latest
+	// if current version have no specific version, use the latest instead.
 	if current.Version == "" && current.SHA == "" {
 		catalogURL, err := getCatalogURL(current)
 		if err != nil {
@@ -214,64 +213,11 @@ func (a *AppSetup) UpgradeApp(ctx context.Context, current, desired App) error {
 		return microerror.Mask(err)
 	}
 
-	var appCRNamespace string
-
-	if current.AppCRNamespace != "" {
-		appCRNamespace = current.AppCRNamespace
-	} else {
-		appCRNamespace = defaultNamespace
-	}
-
-	a.logger.Debugf(ctx, "finding %#q app from current deployments", currentApp.Name)
-
-	// 1. Find app CR.
-	err = a.ctrlClient.Get(
-		ctx,
-		types.NamespacedName{Name: current.Name, Namespace: appCRNamespace},
-		&currentApp)
+	err = a.updateApp(ctx, desired)
 	if err != nil {
 		return microerror.Mask(err)
 	}
 
-	a.logger.Debugf(ctx, "found %#q app from current deployments", currentApp.Name)
-
-	desiredApp := currentApp.DeepCopy()
-
-	// 2. Put the desired version.
-	{
-		catalogURL, err := getCatalogURL(desired)
-		if err != nil {
-			return microerror.Mask(err)
-		}
-
-		var appVersion string
-		if desired.SHA != "" {
-			appVersion = desired.SHA
-		} else {
-			appVersion = desired.Version
-		}
-
-		version, err := appcatalog.GetLatestVersion(ctx, catalogURL, current.Name, appVersion)
-		if err != nil {
-			return microerror.Mask(err)
-		}
-
-		desiredApp.Spec.Version = version
-	}
-
-	desiredApp.Spec.Catalog = desired.CatalogName
-
-	a.logger.Debugf(ctx, "updating %#q app cr in namespace %#q", currentApp.Name, appCRNamespace)
-	err = a.ctrlClient.Update(
-		ctx,
-		desiredApp)
-	if err != nil {
-		return microerror.Mask(err)
-	}
-
-	a.logger.Debugf(ctx, "updated %#q app cr in namespace %#q", currentApp.Name, appCRNamespace)
-
-	// 3. check if it's updated.
 	err = a.waitForDeployedApp(ctx, desired)
 	if err != nil {
 		return microerror.Mask(err)
@@ -552,6 +498,67 @@ func (a *AppSetup) createUserValuesConfigMap(ctx context.Context, name, namespac
 	} else {
 		a.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("created configmap '%s/%s'", namespace, name))
 	}
+
+	return nil
+}
+
+func (a *AppSetup) updateApp(ctx context.Context, desired App) error {
+	var err error
+	var currentApp v1alpha1.App
+
+	var appCRNamespace string
+	if desired.AppCRNamespace != "" {
+		appCRNamespace = desired.AppCRNamespace
+	} else {
+		appCRNamespace = defaultNamespace
+	}
+
+	a.logger.Debugf(ctx, "Finding %#q app in namespace %#q", appCRNamespace)
+
+	err = a.ctrlClient.Get(
+		ctx,
+		types.NamespacedName{Name: desired.Name, Namespace: appCRNamespace},
+		&currentApp)
+	if err != nil {
+		return microerror.Mask(err)
+	}
+
+	a.logger.Debugf(ctx, "Found %#q app in namespace %#q", appCRNamespace)
+
+	desiredApp := currentApp.DeepCopy()
+
+	var version string
+	{
+		catalogURL, err := getCatalogURL(desired)
+		if err != nil {
+			return microerror.Mask(err)
+		}
+
+		var appVersion string
+		if desired.SHA != "" {
+			appVersion = desired.SHA
+		} else {
+			appVersion = desired.Version
+		}
+
+		version, err = appcatalog.GetLatestVersion(ctx, catalogURL, desired.Name, appVersion)
+		if err != nil {
+			return microerror.Mask(err)
+		}
+	}
+
+	desiredApp.Spec.Version = version
+	desiredApp.Spec.Catalog = desired.CatalogName
+
+	a.logger.Debugf(ctx, "updating %#q app cr in namespace %#q", currentApp.Name, appCRNamespace)
+	err = a.ctrlClient.Update(
+		ctx,
+		desiredApp)
+	if err != nil {
+		return microerror.Mask(err)
+	}
+
+	a.logger.Debugf(ctx, "updated %#q app cr in namespace %#q", currentApp.Name, appCRNamespace)
 
 	return nil
 }
