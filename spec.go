@@ -14,8 +14,8 @@ type Interface interface {
 	// and ensures they are installed by our app platform.
 	InstallApps(ctx context.Context, apps []App) error
 
-	// UpgradeApp find matching app CR and change the version
-	// and ensures they are upgraded by our app platform.
+	// UpgradeApp find matching current app CR and change the spec
+	// to follow desired app CR.
 	UpgradeApp(ctx context.Context, current, desired App) error
 
 	// EnsureCRDs will register the passed CRDs in the k8s API used by the client.
