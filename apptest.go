@@ -29,7 +29,7 @@ import (
 const (
 	deployedStatus     = "deployed"
 	failedStatus       = "failed"
-	notInstallStatus   = "not-installed"
+	notInstalledStatus = "not-installed"
 	defaultNamespace   = "giantswarm"
 	uniqueAppCRVersion = "0.0.0"
 )
@@ -208,7 +208,7 @@ func (a *AppSetup) UpgradeApp(ctx context.Context, current, desired App) error {
 		return microerror.Mask(err)
 	}
 
-	err = a.waitForDeployedApps(ctx, []App{current})
+	err = a.waitForDeployedApp(ctx, current)
 	if err != nil {
 		return microerror.Mask(err)
 	}
@@ -513,7 +513,7 @@ func (a *AppSetup) updateApp(ctx context.Context, desired App) error {
 		appCRNamespace = defaultNamespace
 	}
 
-	a.logger.Debugf(ctx, "Finding %#q app in namespace %#q", appCRNamespace)
+	a.logger.Debugf(ctx, "finding %#q app in namespace %#q", appCRNamespace)
 
 	err = a.ctrlClient.Get(
 		ctx,
@@ -523,7 +523,7 @@ func (a *AppSetup) updateApp(ctx context.Context, desired App) error {
 		return microerror.Mask(err)
 	}
 
-	a.logger.Debugf(ctx, "Found %#q app in namespace %#q", appCRNamespace)
+	a.logger.Debugf(ctx, "found %#q app in namespace %#q", appCRNamespace)
 
 	desiredApp := currentApp.DeepCopy()
 
@@ -603,7 +603,7 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, testApp App) error {
 		}
 
 		switch app.Status.Release.Status {
-		case notInstallStatus, failedStatus:
+		case notInstalledStatus, failedStatus:
 			return backoff.Permanent(microerror.Maskf(executionFailedError, "status %#q, reason: %s", app.Status.Release.Status, app.Status.Release.Reason))
 		case deployedStatus:
 			if testApp.SHA != "" && strings.HasSuffix(app.Status.Version, testApp.SHA) {
