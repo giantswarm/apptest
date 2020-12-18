@@ -2,5 +2,5 @@ apiVersion: v1
 appVersion: v1.8.0
 description: A Helm chart for a test app
 home: https://github.com/giantswarm/apptest
-name: test-app
+name: apptest-test-app
 version: [[ .Version ]]
