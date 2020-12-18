@@ -1,0 +1,8 @@
+{{if eq .Release.Service "Helm" -}}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  {{ .Release.Namespace }}
+  labels:
+    ross: "test"
+{{end}}
