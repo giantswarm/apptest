@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  architect: giantswarm/architect@0.10.2
+  architect: giantswarm/architect@1.0.0
 
 workflows:
   test:
@@ -12,3 +12,75 @@ workflows:
             # Trigger job also on git tag.
             tags:
               only: /^v.*/
+
+      - architect/push-to-app-catalog:
+          context: "architect"
+          name: push-test-app-to-control-plane-catalog
+          app_catalog: "control-plane-catalog"
+          app_catalog_test: "control-plane-test-catalog"
+          chart: "test-app"
+          # Needed to trigger job also on git tag.
+          filters:
+            tags:
+              only: /^v.*/
+
+      - architect/integration-test:
+          name: "basic-integration-test"
+          install-app-platform: true
+          test-dir: "integration/test/basic"
+          filters:
+            # Do not trigger the job on merge to master.
+            branches:
+              ignore:
+                - master
+          requires:
+            - push-test-app-to-control-plane-catalog
+
+      - architect/integration-test:
+          name: "ensure-crds-integration-test"
+          install-app-platform: true
+          test-dir: "integration/test/ensurecrds"
+          filters:
+            # Do not trigger the job on merge to master.
+            branches:
+              ignore:
+                - master
+          requires:
+            - push-test-app-to-control-plane-catalog
+
+      - architect/integration-test:
+          name: "external-catalog-integration-test"
+          install-app-platform: true
+          test-dir: "integration/test/externalcatalog"
+          filters:
+            # Do not trigger the job on merge to master.
+            branches:
+              ignore:
+                - master
+          requires:
+            - push-test-app-to-control-plane-catalog
+
+      - architect/integration-test:
+          name: "remote-cluster-integration-test"
+          install-app-platform: true
+          test-dir: "integration/test/remotecluster"
+          filters:
+            # Do not trigger the job on merge to master.
+            branches:
+              ignore:
+                - master
+          requires:
+            - push-test-app-to-control-plane-catalog
+
+      - architect/integration-test:
+          name: "upgrade-app-integration-test"
+          install-app-platform: true
+          test-dir: "integration/test/upgradeapp"
+          filters:
+            # Do not trigger the job on merge to master.
+            branches:
+              ignore:
+                - master
+          requires:
+            - push-test-app-to-control-plane-catalog
+
