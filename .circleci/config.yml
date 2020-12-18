@@ -23,6 +23,8 @@ workflows:
           filters:
             tags:
               only: /^v.*/
+          requires:
+            - go-test
 
       - architect/integration-test:
           name: "basic-integration-test"
