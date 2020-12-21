@@ -32,14 +32,14 @@ func TestUpgradeApp(t *testing.T) {
 
 	currentApp := apptest.App{
 		CatalogName:   "default",
-		Name:          "test-app",
+		Name:          "apptest-app",
 		Namespace:     "giantswarm",
 		WaitForDeploy: true,
 	}
 
 	desiredApp := apptest.App{
 		CatalogName:   "default-test",
-		Name:          "test-app",
+		Name:          "apptest-app",
 		Namespace:     "giantswarm",
 		SHA:           env.CircleSHA(),
 		WaitForDeploy: true,

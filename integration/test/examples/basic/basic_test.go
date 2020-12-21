@@ -45,7 +45,7 @@ func TestBasic(t *testing.T) {
 		{
 			// Install the component being tested.
 			CatalogName:   "default-test", // Test catalog.
-			Name:          "test-app",
+			Name:          "apptest-app",
 			Namespace:     "giantswarm",
 			SHA:           env.CircleSHA(), // The commit to be tested.
 			ValuesYAML:    "e2e: true",     // Provide values for the app.

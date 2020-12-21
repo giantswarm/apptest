@@ -51,7 +51,7 @@ func TestRemoteCluster(t *testing.T) {
 			AppOperatorVersion: "0.0.0", // app-operator version to use.
 			CatalogName:        "default",
 			// KubeConfig:      "kubeconfig" // TODO Sort out kubeconfig.
-			Name:          "test-app",
+			Name:          "apptest-app",
 			Namespace:     "kube-system",
 			Version:       env.CircleSHA(),
 			WaitForDeploy: true,
