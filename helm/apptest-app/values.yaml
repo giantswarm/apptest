@@ -18,9 +18,3 @@ resources:
   requests:
     cpu: 100m
     memory: 300Mi
-
-test:
-  image:
-    registry: quay.io
-    name: giantswarm/alpine-testing
-    tag: 0.1.1
