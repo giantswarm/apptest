@@ -44,7 +44,7 @@ func TestBasic(t *testing.T) {
 		},
 		{
 			// Install the component being tested.
-			CatalogName:   "control-plane-test", // Test catalog.
+			CatalogName:   "control-plane-test-catalog", // Test catalog.
 			Name:          "apptest-app",
 			Namespace:     "giantswarm",
 			SHA:           env.CircleSHA(), // The commit to be tested.
