@@ -1,4 +1,4 @@
-name: test-app
+name: apptest-app
 namespace: kube-system
 port: 10301
 portName: metrics

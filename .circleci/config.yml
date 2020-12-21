@@ -15,10 +15,10 @@ workflows:
 
       - architect/push-to-app-catalog:
           context: "architect"
-          name: push-test-app-to-control-plane-catalog
+          name: push-apptest-app-to-control-plane-catalog
           app_catalog: "control-plane-catalog"
           app_catalog_test: "control-plane-test-catalog"
-          chart: "test-app"
+          chart: "apptest-app"
           # Needed to trigger job also on git tag.
           filters:
             tags:
@@ -36,7 +36,7 @@ workflows:
               ignore:
                 - master
           requires:
-            - push-test-app-to-control-plane-catalog
+            - push-apptest-app-to-control-plane-catalog
 
       - architect/integration-test:
           name: "ensure-crds-integration-test"
@@ -48,7 +48,7 @@ workflows:
               ignore:
                 - master
           requires:
-            - push-test-app-to-control-plane-catalog
+            - push-apptest-app-to-control-plane-catalog
 
       - architect/integration-test:
           name: "external-catalog-integration-test"
@@ -60,7 +60,7 @@ workflows:
               ignore:
                 - master
           requires:
-            - push-test-app-to-control-plane-catalog
+            - push-apptest-app-to-control-plane-catalog
 
       - architect/integration-test:
           name: "remote-cluster-integration-test"
@@ -72,7 +72,7 @@ workflows:
               ignore:
                 - master
           requires:
-            - push-test-app-to-control-plane-catalog
+            - push-apptest-app-to-control-plane-catalog
 
       - architect/integration-test:
           name: "upgrade-app-integration-test"
@@ -84,5 +84,5 @@ workflows:
               ignore:
                 - master
           requires:
-            - push-test-app-to-control-plane-catalog
+            - push-apptest-app-to-control-plane-catalog
 
