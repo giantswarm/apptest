@@ -29,7 +29,7 @@ workflows:
       - architect/integration-test:
           name: "basic-integration-test"
           install-app-platform: true
-          test-dir: "integration/test/basic"
+          test-dir: "integration/test/examples/basic"
           filters:
             # Do not trigger the job on merge to master.
             branches:
@@ -41,7 +41,7 @@ workflows:
       - architect/integration-test:
           name: "ensure-crds-integration-test"
           install-app-platform: true
-          test-dir: "integration/test/ensurecrds"
+          test-dir: "integration/test/examples/ensurecrds"
           filters:
             # Do not trigger the job on merge to master.
             branches:
@@ -53,7 +53,7 @@ workflows:
       - architect/integration-test:
           name: "external-catalog-integration-test"
           install-app-platform: true
-          test-dir: "integration/test/externalcatalog"
+          test-dir: "integration/test/examples/externalcatalog"
           filters:
             # Do not trigger the job on merge to master.
             branches:
@@ -65,7 +65,7 @@ workflows:
       - architect/integration-test:
           name: "remote-cluster-integration-test"
           install-app-platform: true
-          test-dir: "integration/test/remotecluster"
+          test-dir: "integration/test/examples/remotecluster"
           filters:
             # Do not trigger the job on merge to master.
             branches:
@@ -77,7 +77,7 @@ workflows:
       - architect/integration-test:
           name: "upgrade-app-integration-test"
           install-app-platform: true
-          test-dir: "integration/test/upgradeapp"
+          test-dir: "integration/test/examples/upgradeapp"
           filters:
             # Do not trigger the job on merge to master.
             branches:
