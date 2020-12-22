@@ -16,6 +16,7 @@ workflows:
       - architect/push-to-app-catalog:
           context: "architect"
           name: push-apptest-app-to-control-plane-catalog
+          app_catalog: "control-plane-test-catalog"
           app_catalog_test: "control-plane-test-catalog"
           chart: "apptest-app"
           filters:
