@@ -78,7 +78,7 @@ func TestRemoteCluster(t *testing.T) {
 			KubeConfig:         kubeConfig, // Specify a kubeconfig for the remote cluster.
 			Name:               "apptest-app",
 			Namespace:          "kube-system",
-			Version:            env.CircleSHA(),
+			SHA:                env.CircleSHA(), // The commit to be tested.
 			WaitForDeploy:      true,
 		},
 	}
