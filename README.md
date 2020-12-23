@@ -10,12 +10,12 @@ Go library for using the Giant Swarm app platform in integration tests.
 - apptest should be useable in any cluster but [kind] (Kubernetes in Docker) is
 the primary target for local development. 
 - [apptestctl] bootstraps app platform and has complex dependencies but is used
-as a downloadble CLI.
+as a downloadable CLI.
 - Components are installed via [app CR] to match how we deploy them in production.
 
 ## Setup
 
-- apptest is designed to be used with the [integration-test] job in `architect-orb`.
+- apptest is designed to be used with the [integration-test-job] in `architect-orb`.
 - `install-app-platform` must be true and triggers an `apptestctl bootstrap`.
 
 ```yaml
@@ -201,6 +201,6 @@ Test: [external-catalog-test]
 [integration-test-job]: https://github.com/giantswarm/architect-orb/blob/master/docs/job/integration-test.md
 [kind]: https://kind.sigs.k8s.io/
 
-[basic-test]: https://github.com/giantswarm/apptest/tree/master/integration/test/basic/basic.go
-[ensure-crds-test]: https://github.com/giantswarm/apptest/tree/master/integration/test/ensurecrds/ensure_crds.go
-[external-catalog-test]: https://github.com/giantswarm/apptest/tree/master/integration/test/externalcatalog/external_catalog.go
+[basic-test]: https://github.com/giantswarm/apptest/blob/master/integration/test/basic/basic_test.go
+[ensure-crds-test]: https://github.com/giantswarm/apptest/blob/master/integration/test/ensurecrds/ensure_crds_test.go
+[external-catalog-test]: https://github.com/giantswarm/apptest/blob/master/integration/test/externalcatalog/external_catalog_test.go
