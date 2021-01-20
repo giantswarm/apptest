@@ -410,6 +410,7 @@ func (a *AppSetup) createApps(ctx context.Context, apps []App) error {
 				Namespace: appCRNamespace,
 				Labels: map[string]string{
 					label.AppOperatorVersion: appOperatorVersion,
+					label.AppKubernetesName:  app.Name,
 				},
 			},
 			Spec: v1alpha1.AppSpec{
