@@ -363,6 +363,8 @@ func (a *AppSetup) createApps(ctx context.Context, apps []App) error {
 		var appCRName string
 
 		if app.AppCRName != "" {
+			appCRName = app.AppCRName
+		} else {
 			appCRName = app.Name
 		}
 
