@@ -662,7 +662,7 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, testApp App) error {
 	o := func() error {
 		err = a.ctrlClient.Get(
 			ctx,
-			types.NamespacedName{Name: testApp.Name, Namespace: appCRNamespace},
+			types.NamespacedName{Name: appCRName, Namespace: appCRNamespace},
 			&app)
 		if err != nil {
 			return microerror.Mask(err)
