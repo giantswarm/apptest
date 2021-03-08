@@ -504,7 +504,7 @@ func (a *AppSetup) ensureUserValuesConfigMap(ctx context.Context, name, namespac
 			a.logger.Debugf(ctx, "already created configmap '%s/%s'", namespace, name)
 		} else if err != nil {
 			return microerror.Mask(err)
-              }
+		}
 		a.logger.Debugf(ctx, "created configmap '%s/%s'", namespace, name)
 
 		return nil
