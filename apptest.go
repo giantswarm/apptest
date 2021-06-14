@@ -461,11 +461,12 @@ func (a *AppSetup) createCatalogs(ctx context.Context, apps []App) error {
 			return microerror.Mask(err)
 		}
 
-		a.logger.Debugf(ctx, "creating %#q appcatalog cr", app.CatalogName)
+		a.logger.Debugf(ctx, "creating %#q catalog cr", app.CatalogName)
 
 		catalogCR := &v1alpha1.Catalog{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: app.CatalogName,
+				Name:      app.CatalogName,
+				Namespace: metav1.NamespaceDefault,
 				Labels: map[string]string{
 					// Processed by app-operator-unique.
 					label.AppOperatorVersion: uniqueAppCRVersion,
