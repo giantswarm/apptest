@@ -62,3 +62,15 @@ workflows:
                 - master
           requires:
             - push-apptest-app-to-control-plane-test-catalog
+
+      - architect/integration-test:
+          name: "remote-cluster-integration-test"
+          install-app-platform: true
+          test-dir: "integration/test/remotecluster"
+          filters:
+            # Do not trigger the job on merge to master.
+            branches:
+              ignore:
+                - master
+          requires:
+            - push-apptest-app-to-control-plane-test-catalog
