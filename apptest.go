@@ -56,6 +56,7 @@ var (
 type Config struct {
 	KubeConfig     string
 	KubeConfigPath string
+	Verbose        bool
 
 	Logger micrologger.Logger
 	Scheme *runtime.Scheme
@@ -63,6 +64,8 @@ type Config struct {
 
 // AppSetup implements the logic for managing the app setup.
 type AppSetup struct {
+	verbose bool
+
 	ctrlClient client.Client
 	k8sClient  kubernetes.Interface
 	logger     micrologger.Logger
@@ -150,6 +153,8 @@ func New(config Config) (*AppSetup, error) {
 	}
 
 	a := &AppSetup{
+		verbose: config.Verbose,
+
 		ctrlClient: ctrlClient,
 		k8sClient:  k8sClient,
 		logger:     config.Logger,
@@ -320,7 +325,7 @@ func (a *AppSetup) createAppCatalogs(ctx context.Context, apps []App) error {
 			return microerror.Mask(err)
 		}
 
-		a.logger.Debugf(ctx, "creating %#q appcatalog cr", app.CatalogName)
+		a.log(ctx, "creating %#q appcatalog cr", app.CatalogName)
 
 		appCatalogCR := &v1alpha1.AppCatalog{
 			ObjectMeta: metav1.ObjectMeta{
@@ -341,12 +346,12 @@ func (a *AppSetup) createAppCatalogs(ctx context.Context, apps []App) error {
 		}
 		err = a.ctrlClient.Create(ctx, appCatalogCR)
 		if apierrors.IsAlreadyExists(err) {
-			a.logger.Debugf(ctx, "%#q appcatalog CR already exists", appCatalogCR.Name)
+			a.log(ctx, "%#q appcatalog CR already exists", appCatalogCR.Name)
 		} else if err != nil {
 			return microerror.Mask(err)
 		}
 
-		a.logger.Debugf(ctx, "created %#q appcatalog cr", app.CatalogName)
+		a.log(ctx, "created %#q appcatalog cr", app.CatalogName)
 	}
 
 	return nil
@@ -361,7 +366,7 @@ func (a *AppSetup) createApps(ctx context.Context, apps []App) error {
 			return microerror.Mask(err)
 		}
 
-		a.logger.Debugf(ctx, "creating %#q app cr from catalog %#q with version %#q", app.Name, app.CatalogName, version)
+		a.log(ctx, "creating %#q app cr from catalog %#q with version %#q", app.Name, app.CatalogName, version)
 
 		var appOperatorVersion string
 
@@ -449,13 +454,13 @@ func (a *AppSetup) createApps(ctx context.Context, apps []App) error {
 
 		err = a.ctrlClient.Create(ctx, appCR)
 		if apierrors.IsAlreadyExists(err) {
-			a.logger.Debugf(ctx, "%#q app CR already exists", appCR.Name)
+			a.log(ctx, "%#q app CR already exists", appCR.Name)
 			return nil
 		} else if err != nil {
 			return microerror.Mask(err)
 		}
 
-		a.logger.Debugf(ctx, "created %#q app cr", appCR.Name)
+		a.log(ctx, "created %#q app cr", appCR.Name)
 	}
 
 	return nil
@@ -468,7 +473,7 @@ func (a *AppSetup) createCatalogs(ctx context.Context, apps []App) error {
 			return microerror.Mask(err)
 		}
 
-		a.logger.Debugf(ctx, "creating %#q catalog cr", app.CatalogName)
+		a.log(ctx, "creating %#q catalog cr", app.CatalogName)
 
 		catalogCR := &v1alpha1.Catalog{
 			ObjectMeta: metav1.ObjectMeta{
@@ -490,19 +495,19 @@ func (a *AppSetup) createCatalogs(ctx context.Context, apps []App) error {
 		}
 		err = a.ctrlClient.Create(ctx, catalogCR)
 		if apierrors.IsAlreadyExists(err) {
-			a.logger.Debugf(ctx, "%#q catalog CR already exists", catalogCR.Name)
+			a.log(ctx, "%#q catalog CR already exists", catalogCR.Name)
 		} else if err != nil {
 			return microerror.Mask(err)
 		}
 
-		a.logger.Debugf(ctx, "created %#q catalog cr", app.CatalogName)
+		a.log(ctx, "created %#q catalog cr", app.CatalogName)
 	}
 
 	return nil
 }
 
 func (a *AppSetup) createKubeConfigSecret(ctx context.Context, name, namespace, kubeConfig string) error {
-	a.logger.Debugf(ctx, "creating secret '%s/%s'", namespace, name)
+	a.log(ctx, "creating secret '%s/%s'", namespace, name)
 
 	data := map[string][]byte{
 		"kubeConfig": []byte(kubeConfig),
@@ -522,14 +527,14 @@ func (a *AppSetup) createKubeConfigSecret(ctx context.Context, name, namespace, 
 			return microerror.Mask(err)
 		}
 
-		a.logger.Debugf(ctx, "created secret '%s/%s'", namespace, name)
+		a.log(ctx, "created secret '%s/%s'", namespace, name)
 	} else {
 		_, err := a.k8sClient.CoreV1().Secrets(namespace).Update(ctx, desired, metav1.UpdateOptions{})
 		if err != nil {
 			return microerror.Mask(err)
 		}
 
-		a.logger.Debugf(ctx, "updated existing secret '%s/%s'", namespace, name)
+		a.log(ctx, "updated existing secret '%s/%s'", namespace, name)
 	}
 
 	return nil
@@ -549,27 +554,27 @@ func (a *AppSetup) ensureUserValuesConfigMap(ctx context.Context, name, namespac
 
 	_, err := a.k8sClient.CoreV1().ConfigMaps(namespace).Get(ctx, name, metav1.GetOptions{})
 	if apierrors.IsNotFound(err) {
-		a.logger.Debugf(ctx, "creating configmap '%s/%s'", namespace, name)
+		a.log(ctx, "creating configmap '%s/%s'", namespace, name)
 
 		_, err := a.k8sClient.CoreV1().ConfigMaps(namespace).Create(ctx, configMap, metav1.CreateOptions{})
 		if apierrors.IsAlreadyExists(err) {
-			a.logger.Debugf(ctx, "already created configmap '%s/%s'", namespace, name)
+			a.log(ctx, "already created configmap '%s/%s'", namespace, name)
 		} else if err != nil {
 			return microerror.Mask(err)
 		}
-		a.logger.Debugf(ctx, "created configmap '%s/%s'", namespace, name)
+		a.log(ctx, "created configmap '%s/%s'", namespace, name)
 
 		return nil
 	}
 
-	a.logger.Debugf(ctx, "updating configmap '%s/%s'", namespace, name)
+	a.log(ctx, "updating configmap '%s/%s'", namespace, name)
 
 	_, err = a.k8sClient.CoreV1().ConfigMaps(namespace).Update(ctx, configMap, metav1.UpdateOptions{})
 	if err != nil {
 		return microerror.Mask(err)
 	}
 
-	a.logger.Debugf(ctx, "updated configmap '%s/%s'", namespace, name)
+	a.log(ctx, "updated configmap '%s/%s'", namespace, name)
 
 	return nil
 }
@@ -633,7 +638,7 @@ func (a *AppSetup) updateApp(ctx context.Context, desired App) error {
 		appCRNamespace = defaultNamespace
 	}
 
-	a.logger.Debugf(ctx, "finding %#q app in namespace %#q", appCRName, appCRNamespace)
+	a.log(ctx, "finding %#q app in namespace %#q", appCRName, appCRNamespace)
 
 	err = a.ctrlClient.Get(
 		ctx,
@@ -643,7 +648,7 @@ func (a *AppSetup) updateApp(ctx context.Context, desired App) error {
 		return microerror.Mask(err)
 	}
 
-	a.logger.Debugf(ctx, "found %#q app in namespace %#q", appCRName, appCRNamespace)
+	a.log(ctx, "found %#q app in namespace %#q", appCRName, appCRNamespace)
 
 	desiredApp := currentApp.DeepCopy()
 
@@ -670,9 +675,9 @@ func (a *AppSetup) updateApp(ctx context.Context, desired App) error {
 	desiredApp.Spec.Version = version
 	desiredApp.Spec.Catalog = desired.CatalogName
 
-	a.logger.Debugf(ctx, "updating %#q app cr in namespace %#q", currentApp.Name, appCRNamespace)
-	a.logger.Debugf(ctx, "desired version: %#q", version)
-	a.logger.Debugf(ctx, "desired catalog: %#q", desired.CatalogName)
+	a.log(ctx, "updating %#q app cr in namespace %#q", currentApp.Name, appCRNamespace)
+	a.log(ctx, "desired version: %#q", version)
+	a.log(ctx, "desired catalog: %#q", desired.CatalogName)
 
 	err = a.ctrlClient.Update(
 		ctx,
@@ -681,7 +686,7 @@ func (a *AppSetup) updateApp(ctx context.Context, desired App) error {
 		return microerror.Mask(err)
 	}
 
-	a.logger.Debugf(ctx, "updated %#q app cr in namespace %#q", currentApp.Name, appCRNamespace)
+	a.log(ctx, "updated %#q app cr in namespace %#q", currentApp.Name, appCRNamespace)
 
 	return nil
 }
@@ -694,7 +699,7 @@ func (a *AppSetup) waitForDeployedApps(ctx context.Context, apps []App) error {
 				return microerror.Mask(err)
 			}
 		} else {
-			a.logger.Debugf(ctx, "skipping wait for deploy of %#q app cr", app.Name)
+			a.log(ctx, "skipping wait for deploy of %#q app cr", app.Name)
 		}
 	}
 
@@ -720,7 +725,7 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, testApp App) error {
 		appCRNamespace = defaultNamespace
 	}
 
-	a.logger.Debugf(ctx, "ensuring '%s/%s' app CR is %#q", appCRNamespace, appCRName, deployedStatus)
+	a.log(ctx, "ensuring '%s/%s' app CR is %#q", appCRNamespace, appCRName, deployedStatus)
 
 	var app v1alpha1.App
 
@@ -768,9 +773,16 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, testApp App) error {
 		return microerror.Mask(err)
 	}
 
-	a.logger.Debugf(ctx, "ensured '%s/%s' app CR is deployed", appCRNamespace, testApp.Name)
+	a.log(ctx, "ensured '%s/%s' app CR is deployed", appCRNamespace, testApp.Name)
 
 	return nil
+}
+
+// log is a wrapper so debug logging is only enabled if verbose is true.
+func (a *AppSetup) log(ctx context.Context, format string, params ...interface{}) {
+	if a.verbose {
+		a.logger.Debugf(ctx, format, params)
+	}
 }
 
 // getCatalogURL returns the catalog URL for this app. If it is a Giant Swarm
