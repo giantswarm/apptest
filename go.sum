@@ -166,8 +166,8 @@ github.com/fsnotify/fsnotify v1.4.9/go.mod h1:znqG4EE+3YCdAaPaxE2ZRY/06pZUdp0tY4
 github.com/ghodss/yaml v0.0.0-20150909031657-73d445a93680/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
 github.com/giantswarm/apiextensions/v3 v3.35.0/go.mod h1:uV8pzwVdUlzvrC9WZGb6z0koSNSampo3nLFSDW3mukA=
-github.com/giantswarm/apiextensions/v3 v3.36.0 h1:VuZChtOsgtA0nkdDPIDkwqcXOD/QP0Ed+I07V5bkorU=
-github.com/giantswarm/apiextensions/v3 v3.36.0/go.mod h1:uV8pzwVdUlzvrC9WZGb6z0koSNSampo3nLFSDW3mukA=
+github.com/giantswarm/apiextensions/v3 v3.38.0 h1:KdELD0Pd5aSGW5dVAOD579Hj46zcBNBvtrCGBf8ceOQ=
+github.com/giantswarm/apiextensions/v3 v3.38.0/go.mod h1:JgJfW2MjWKTAXfJ77rMcmKjVl3blvGSBWy43SVrpHY0=
 github.com/giantswarm/app/v5 v5.4.0 h1:H2wY3SMMKp2ivrt5FtOzd8nQiA2Jq7YwJWfdmvQybUk=
 github.com/giantswarm/app/v5 v5.4.0/go.mod h1:xnbfQm/H5zlY813NGMyzj3h4/TlAvpDyJYioYd2b1PI=
 github.com/giantswarm/appcatalog v0.6.0 h1:lJMmiPK2pyWQtOaLlBwq0Ut1XrMhcnGeA+3j4OMHyfU=
