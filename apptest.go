@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/giantswarm/apiextensions-application/api/v1alpha1"
-	"github.com/giantswarm/k8smetadata/pkg/label"
 	"github.com/giantswarm/appcatalog"
 	"github.com/giantswarm/backoff"
+	"github.com/giantswarm/k8smetadata/pkg/label"
 	"github.com/giantswarm/microerror"
 	"github.com/giantswarm/micrologger"
 	corev1 "k8s.io/api/core/v1"
