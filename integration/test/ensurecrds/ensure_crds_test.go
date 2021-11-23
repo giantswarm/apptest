@@ -7,8 +7,8 @@ import (
 	"context"
 	"testing"
 
-	monitoringv1alpha1 "github.com/giantswarm/silence-operator/api/v1alpha1"
 	"github.com/giantswarm/app/v5/pkg/crd"
+	monitoringv1alpha1 "github.com/giantswarm/silence-operator/api/v1alpha1"
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 
