@@ -10,7 +10,7 @@ require (
 	github.com/giantswarm/k8smetadata v0.6.0
 	github.com/giantswarm/microerror v0.3.0
 	github.com/giantswarm/micrologger v0.5.0
-	github.com/giantswarm/silence-operator v0.3.1-0.20211113221907-810cf2fe42c3
+	github.com/giantswarm/silence-operator v0.4.0
 	k8s.io/api v0.20.13
 	k8s.io/apiextensions-apiserver v0.20.13
 	k8s.io/apimachinery v0.20.13
