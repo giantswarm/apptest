@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add verbose flag to make logs less noisy in apptestctl.
 
+## [1.0.0] - 2021-11-29
+
+### Changed
+
+- Drop `apiextensions` dependency.
+
 ## [0.12.0] - 2021-08-24
 
 ### Added
@@ -150,7 +156,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add initial version that implements InstallApps for use in apptestctl and
 Go integration tests.
 
-[Unreleased]: https://github.com/giantswarm/apptest/compare/v0.12.0...HEAD
+[Unreleased]: https://github.com/giantswarm/apptest/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/giantswarm/apptest/compare/v0.12.0...v1.0.0
 [0.12.0]: https://github.com/giantswarm/apptest/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/giantswarm/apptest/compare/v0.11.0...v0.11.0
 [0.11.0]: https://github.com/giantswarm/apptest/compare/v0.10.3...v0.11.0
