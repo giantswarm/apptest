@@ -6,7 +6,7 @@ require (
 	github.com/giantswarm/apiextensions-application v0.2.0
 	github.com/giantswarm/app/v6 v6.1.0
 	github.com/giantswarm/appcatalog v0.6.0
-	github.com/giantswarm/backoff v0.2.0
+	github.com/giantswarm/backoff v1.0.0
 	github.com/giantswarm/k8smetadata v0.7.1
 	github.com/giantswarm/microerror v0.4.0
 	github.com/giantswarm/micrologger v0.6.0
@@ -19,7 +19,7 @@ require (
 )
 
 require (
-	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
+	github.com/cenkalti/backoff/v4 v4.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/evanphx/json-patch v4.11.0+incompatible // indirect
 	github.com/giantswarm/to v0.4.0 // indirect
