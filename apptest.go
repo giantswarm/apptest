@@ -603,7 +603,7 @@ func (a *AppSetup) ensureCRD(ctx context.Context, crd *apiextensionsv1.CustomRes
 	}
 
 	n := func(err error, t time.Duration) {
-		a.logger.Errorf(ctx, err, "failed to get CRD '%s': retrying in %s", crd.Name, t)
+		a.logger.Debugf(ctx, "failed to get CRD '%s': retrying in %s", crd.Name, t)
 	}
 
 	b := backoff.NewExponential(1*time.Minute, 10*time.Second)
@@ -759,7 +759,7 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, testApp App) error {
 	}
 
 	n := func(err error, t time.Duration) {
-		a.logger.Errorf(ctx, err, "failed to get app CR status '%s': retrying in %s", deployedStatus, t)
+		a.logger.Debugf(ctx, "failed to get app CR status '%s': retrying in %s", deployedStatus, t)
 	}
 
 	b := backoff.NewConstant(20*time.Minute, 10*time.Second)
