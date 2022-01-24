@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2022-01-24
+
 ### Fixed
 
 - Create `Catalog` CRs instead of deprecated `AppCatalog` CRs.
@@ -156,7 +158,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add initial version that implements InstallApps for use in apptestctl and
 Go integration tests.
 
-[Unreleased]: https://github.com/giantswarm/apptest/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/giantswarm/apptest/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/giantswarm/apptest/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/giantswarm/apptest/compare/v0.12.0...v1.0.0
 [0.12.0]: https://github.com/giantswarm/apptest/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/giantswarm/apptest/compare/v0.11.0...v0.11.0
