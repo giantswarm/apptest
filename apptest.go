@@ -159,17 +159,12 @@ func New(config Config) (*AppSetup, error) {
 	return a, nil
 }
 
-// InstallApps creates appcatalog and app CRs for use in automated tests
+// InstallApps creates catalog and app CRs for use in automated tests
 // and ensures they are installed by our app platform.
 func (a *AppSetup) InstallApps(ctx context.Context, apps []App) error {
 	var err error
 
 	err = a.createCatalogs(ctx, apps)
-	if err != nil {
-		return microerror.Mask(err)
-	}
-
-	err = a.createAppCatalogs(ctx, apps)
 	if err != nil {
 		return microerror.Mask(err)
 	}
@@ -190,7 +185,7 @@ func (a *AppSetup) InstallApps(ctx context.Context, apps []App) error {
 func (a *AppSetup) UpgradeApp(ctx context.Context, current, desired App) error {
 	var err error
 
-	err = a.createAppCatalogs(ctx, []App{current, desired})
+	err = a.createCatalogs(ctx, []App{current, desired})
 	if err != nil {
 		return microerror.Mask(err)
 	}
@@ -308,45 +303,6 @@ func (a *AppSetup) CleanUp(ctx context.Context, apps []App) error {
 		} else if err != nil {
 			return microerror.Mask(err)
 		}
-	}
-
-	return nil
-}
-
-func (a *AppSetup) createAppCatalogs(ctx context.Context, apps []App) error {
-	for _, app := range apps {
-		catalogURL, err := getCatalogURL(app)
-		if err != nil {
-			return microerror.Mask(err)
-		}
-
-		a.logger.Debugf(ctx, "creating %#q appcatalog cr", app.CatalogName)
-
-		appCatalogCR := &v1alpha1.AppCatalog{
-			ObjectMeta: metav1.ObjectMeta{
-				Name: app.CatalogName,
-				Labels: map[string]string{
-					// Processed by app-operator-unique.
-					label.AppOperatorVersion: uniqueAppCRVersion,
-				},
-			},
-			Spec: v1alpha1.AppCatalogSpec{
-				Description: app.CatalogName,
-				Title:       app.CatalogName,
-				Storage: v1alpha1.AppCatalogSpecStorage{
-					Type: "helm",
-					URL:  catalogURL,
-				},
-			},
-		}
-		err = a.ctrlClient.Create(ctx, appCatalogCR)
-		if apierrors.IsAlreadyExists(err) {
-			a.logger.Debugf(ctx, "%#q appcatalog CR already exists", appCatalogCR.Name)
-		} else if err != nil {
-			return microerror.Mask(err)
-		}
-
-		a.logger.Debugf(ctx, "created %#q appcatalog cr", app.CatalogName)
 	}
 
 	return nil
