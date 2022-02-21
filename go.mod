@@ -4,21 +4,18 @@ go 1.17
 
 require (
 	github.com/giantswarm/apiextensions-application v0.3.0
+	github.com/giantswarm/app/v6 v6.8.0
 	github.com/giantswarm/appcatalog v0.6.0
 	github.com/giantswarm/backoff v1.0.0
 	github.com/giantswarm/k8smetadata v0.9.2
 	github.com/giantswarm/microerror v0.4.0
 	github.com/giantswarm/micrologger v0.6.0
+	github.com/giantswarm/silence-operator v0.4.0
 	k8s.io/api v0.20.15
 	k8s.io/apiextensions-apiserver v0.20.15
 	k8s.io/apimachinery v0.20.15
 	k8s.io/client-go v0.20.15
 	sigs.k8s.io/controller-runtime v0.8.3
-)
-
-require (
-	github.com/giantswarm/app/v6 v6.8.0
-	github.com/giantswarm/silence-operator v0.4.0
 )
 
 require (
