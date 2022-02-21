@@ -4,18 +4,18 @@ go 1.17
 
 require (
 	github.com/giantswarm/apiextensions-application v0.3.0
-	github.com/giantswarm/app/v6 v6.6.1
+	github.com/giantswarm/app/v6 v6.8.0
 	github.com/giantswarm/appcatalog v0.6.0
 	github.com/giantswarm/backoff v1.0.0
-	github.com/giantswarm/k8smetadata v0.9.1
+	github.com/giantswarm/k8smetadata v0.9.2
 	github.com/giantswarm/microerror v0.4.0
 	github.com/giantswarm/micrologger v0.6.0
 	github.com/giantswarm/silence-operator v0.4.0
-	k8s.io/api v0.21.4
-	k8s.io/apiextensions-apiserver v0.21.4
-	k8s.io/apimachinery v0.21.4
-	k8s.io/client-go v0.21.4
-	sigs.k8s.io/controller-runtime v0.9.7
+	k8s.io/api v0.20.15
+	k8s.io/apiextensions-apiserver v0.20.15
+	k8s.io/apimachinery v0.20.15
+	k8s.io/client-go v0.20.15
+	sigs.k8s.io/controller-runtime v0.8.3
 )
 
 require (
@@ -29,7 +29,6 @@ require (
 	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/google/go-github/v39 v39.2.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/gofuzz v1.1.0 // indirect
@@ -40,6 +39,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/stretchr/testify v1.7.0 // indirect
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect
 	golang.org/x/net v0.0.0-20210520170846-37e1c6afe023 // indirect
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8 // indirect
