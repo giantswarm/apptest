@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Add retry logic when accessing catalog repos to get app version.
+
 ## [1.1.0] - 2022-02-21
 
 ### Changed

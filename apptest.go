@@ -312,7 +312,7 @@ func (a *AppSetup) createApps(ctx context.Context, apps []App) error {
 	for _, app := range apps {
 		// Get app version based on whether a commit SHA or a version was
 		// provided.
-		version, err := getVersionForApp(ctx, app)
+		version, err := a.getVersionForApp(ctx, app)
 		if err != nil {
 			return microerror.Mask(err)
 		}
@@ -729,6 +729,54 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, testApp App) error {
 	return nil
 }
 
+func (a *AppSetup) getLatestVersionForApp(ctx context.Context, catalogURL, appName, appSHA string) (string, error) {
+	var version string
+	var err error
+
+	o := func() error {
+		version, err = appcatalog.GetLatestVersion(ctx, catalogURL, appName, appSHA)
+		if err != nil {
+			return microerror.Mask(err)
+		}
+
+		return nil
+	}
+
+	b := backoff.NewConstant(5*time.Minute, 10*time.Second)
+	n := backoff.NewNotifier(a.logger, ctx)
+
+	err = backoff.RetryNotify(o, b, n)
+	if err != nil {
+		return "", microerror.Mask(err)
+	}
+
+	return version, nil
+}
+
+// getVersionForApp checks whether a commit SHA or a version was provided.
+// If a SHA was provided then we check the test catalog to get the latest version.
+// As for test catalogs the version format used is [latest version]-[sha].
+// e.g. 0.2.0-ad12c88111d7513114a1257994634e2ae81115a2
+//
+// If a version is provided then this is returned. This is to allow app
+// dependencies to be installed.
+func (a *AppSetup) getVersionForApp(ctx context.Context, app App) (version string, err error) {
+	catalogURL, err := getCatalogURL(app)
+	if err != nil {
+		return "", microerror.Mask(err)
+	}
+
+	if app.SHA == "" && app.Version != "" {
+		return app.Version, nil
+	} else if app.SHA != "" && app.Version == "" {
+		return a.getLatestVersionForApp(ctx, catalogURL, app.Name, app.SHA)
+	} else if app.SHA != "" && app.Version != "" {
+		return "", microerror.Maskf(executionFailedError, "both SHA and Version cannot be provided")
+	}
+
+	return "", microerror.Maskf(executionFailedError, "either SHA or Version must be provided")
+}
+
 // getCatalogURL returns the catalog URL for this app. If it is a Giant Swarm
 // catalog no URL needs to be provided.
 func getCatalogURL(app App) (string, error) {
@@ -745,33 +793,4 @@ func getCatalogURL(app App) (string, error) {
 	}
 
 	return catalogURL, nil
-}
-
-// getVersionForApp checks whether a commit SHA or a version was provided.
-// If a SHA was provided then we check the test catalog to get the latest version.
-// As for test catalogs the version format used is [latest version]-[sha].
-// e.g. 0.2.0-ad12c88111d7513114a1257994634e2ae81115a2
-//
-// If a version is provided then this is returned. This is to allow app
-// dependencies to be installed.
-func getVersionForApp(ctx context.Context, app App) (version string, err error) {
-	catalogURL, err := getCatalogURL(app)
-	if err != nil {
-		return "", microerror.Mask(err)
-	}
-
-	if app.SHA == "" && app.Version != "" {
-		return app.Version, nil
-	} else if app.SHA != "" && app.Version == "" {
-		version, err := appcatalog.GetLatestVersion(ctx, catalogURL, app.Name, app.SHA)
-		if err != nil {
-			return "", microerror.Mask(err)
-		}
-
-		return version, nil
-	} else if app.SHA != "" && app.Version != "" {
-		return "", microerror.Maskf(executionFailedError, "both SHA and Version cannot be provided")
-	}
-
-	return "", microerror.Maskf(executionFailedError, "either SHA or Version must be provided")
 }
