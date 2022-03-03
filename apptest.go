@@ -27,6 +27,20 @@ import (
 )
 
 const (
+	ControlPlaneCatalog                     = "control-plane-catalog"
+	ControlPlaneTestCatalog                 = "control-plane-test-catalog"
+	DefaultCatalog                          = "default"
+	DefaultTestCatalog                      = "default-test"
+	GiantSwarmCatalog                       = "giantswarm"
+	GiantSwarmTestCatalog                   = "giantswarm-test"
+	GiantSwarmOperationsPlatformCatalog     = "giantswarm-operations-platform"
+	GiantSwarmOperationsPlatformTestCatalog = "giantswarm-operations-platform-test"
+	GiantSwarmPlaygroundCatalog             = "giantswarm-playground"
+	GiantSwarmPlaygroundTestCatalog         = "giantswarm-playground-test"
+	HelmStableCatalog                       = "helm-stable"
+	ReleasesCatalog                         = "releases"
+	ReleasesTestCatalog                     = "releases-test"
+
 	deployedStatus     = "deployed"
 	failedStatus       = "failed"
 	notInstalledStatus = "not-installed"
@@ -36,19 +50,19 @@ const (
 
 var (
 	giantSwarmCatalogs = map[string]string{
-		"control-plane-catalog":               "https://giantswarm.github.io/control-plane-catalog/",
-		"control-plane-test-catalog":          "https://giantswarm.github.io/control-plane-test-catalog/",
-		"default":                             "https://giantswarm.github.io/default-catalog/",
-		"default-test":                        "https://giantswarm.github.io/default-test-catalog/",
-		"giantswarm":                          "https://giantswarm.github.io/giantswarm-catalog/",
-		"giantswarm-test":                     "https://giantswarm.github.io/giantswarm-test-catalog/",
-		"giantswarm-operations-platform":      "https://giantswarm.github.io/giantswarm-operations-platform-catalog/",
-		"giantswarm-operations-platform-test": "https://giantswarm.github.io/giantswarm-operations-platform-test-catalog/",
-		"giantswarm-playground":               "https://giantswarm.github.io/giantswarm-playground-catalog/",
-		"giantswarm-playground-test":          "https://giantswarm.github.io/giantswarm-playground-test-catalog/",
-		"helm-stable":                         "https://charts.helm.sh/stable/packages/",
-		"releases":                            "https://giantswarm.github.io/releases-catalog/",
-		"releases-test":                       "https://giantswarm.github.io/releases-test-catalog/",
+		ControlPlaneCatalog:                     "https://giantswarm.github.io/control-plane-catalog/",
+		ControlPlaneTestCatalog:                 "https://giantswarm.github.io/control-plane-test-catalog/",
+		DefaultCatalog:                          "https://giantswarm.github.io/default-catalog/",
+		DefaultTestCatalog:                      "https://giantswarm.github.io/default-test-catalog/",
+		GiantSwarmCatalog:                       "https://giantswarm.github.io/giantswarm-catalog/",
+		GiantSwarmTestCatalog:                   "https://giantswarm.github.io/giantswarm-test-catalog/",
+		GiantSwarmOperationsPlatformCatalog:     "https://giantswarm.github.io/giantswarm-operations-platform-catalog/",
+		GiantSwarmOperationsPlatformTestCatalog: "https://giantswarm.github.io/giantswarm-operations-platform-test-catalog/",
+		GiantSwarmPlaygroundCatalog:             "https://giantswarm.github.io/giantswarm-playground-catalog/",
+		GiantSwarmPlaygroundTestCatalog:         "https://giantswarm.github.io/giantswarm-playground-test-catalog/",
+		HelmStableCatalog:                       "https://charts.helm.sh/stable/packages/",
+		ReleasesCatalog:                         "https://giantswarm.github.io/releases-catalog/",
+		ReleasesTestCatalog:                     "https://giantswarm.github.io/releases-test-catalog/",
 	}
 )
 
