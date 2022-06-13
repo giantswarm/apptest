@@ -8,7 +8,7 @@ Go library for using the Giant Swarm app platform in integration tests.
 
 - apptest should have minimal Go dependencies.
 - apptest should be useable in any cluster but [kind] (Kubernetes in Docker) is
-the primary target for local development. 
+the primary target for local development.
 - [apptestctl] bootstraps app platform and has complex dependencies but is used
 as a downloadble CLI.
 - Components are installed via [app CR] to match how we deploy them in production.
@@ -58,7 +58,7 @@ type Interface interface {
 	// K8sClient returns a Kubernetes clienset for use in automated tests.
 	K8sClient() kubernetes.Interface
 }
-``` 
+```
 
 ## Running Tests Locally
 
@@ -177,8 +177,8 @@ Test: [external-catalog-test]
 {
   apps := []apptest.App{
     {
-      // Install app from an external catalog. 
-      CatalogName:   "flux", 
+      // Install app from an external catalog.
+      CatalogName:   "flux",
       CatalogURL:   "https://charts.fluxcd.io/", // Specify the catalog URL
       Name:          "flux",
       Namespace:     "giantswarm",
@@ -196,7 +196,7 @@ Test: [external-catalog-test]
 [app CR]: https://docs.giantswarm.io/reference/cp-k8s-api/apps.application.giantswarm.io/
 [apiextensions]: https://github.com/giantswarm/apiextensions
 [apptestctl]: https://github.com/giantswarm/apptestctl
-[client-go]: https://github.com/kubernetes/client-go 
+[client-go]: https://github.com/kubernetes/client-go
 [controller-runtime]: https://github.com/kubernetes-sigs/controller-runtime
 [integration-test-job]: https://github.com/giantswarm/architect-orb/blob/master/docs/job/integration-test.md
 [kind]: https://kind.sigs.k8s.io/
