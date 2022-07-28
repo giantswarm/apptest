@@ -459,9 +459,9 @@ func (a *AppSetup) createCatalogs(ctx context.Context, apps []App) error {
 				Repositories: []v1alpha1.CatalogSpecRepository{
 					{
 						Type: "helm",
-						URL: catalogURL,
+						URL:  catalogURL,
 					},
-				},	
+				},
 			},
 		}
 		err = a.ctrlClient.Create(ctx, catalogCR)
