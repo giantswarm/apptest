@@ -50,7 +50,7 @@ require (
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gopkg.in/yaml.v3 v3.0.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/klog/v2 v2.9.0 // indirect
 	k8s.io/kube-openapi v0.0.0-20211110013926-83f114cd0513 // indirect
 	k8s.io/utils v0.0.0-20210819203725-bdf08cb9a70a // indirect
@@ -63,5 +63,5 @@ replace (
 	github.com/dgrijalva/jwt-go => github.com/dgrijalva/jwt-go/v4 v4.0.0-preview1
 	github.com/gogo/protobuf v1.3.1 => github.com/gogo/protobuf v1.3.2
 	github.com/gorilla/websocket v1.4.0 => github.com/gorilla/websocket v1.4.2
-	github.com/spf13/viper => github.com/spf13/viper v1.12.0
+	github.com/spf13/viper => github.com/spf13/viper v1.13.0
 )
