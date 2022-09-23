@@ -9,7 +9,7 @@ require (
 	github.com/giantswarm/backoff v1.0.0
 	github.com/giantswarm/k8smetadata v0.9.2
 	github.com/giantswarm/microerror v0.4.0
-	github.com/giantswarm/micrologger v0.6.0
+	github.com/giantswarm/micrologger v1.0.0
 	github.com/giantswarm/silence-operator v0.4.0
 	k8s.io/api v0.20.15
 	k8s.io/apiextensions-apiserver v0.20.15
@@ -25,7 +25,7 @@ require (
 	github.com/giantswarm/to v0.4.0 // indirect
 	github.com/go-kit/log v0.2.0 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
-	github.com/go-logr/logr v0.4.0 // indirect
+	github.com/go-logr/logr v1.2.2 // indirect
 	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
