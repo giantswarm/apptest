@@ -70,9 +70,9 @@ require (
 replace (
 	github.com/bketelsen/crypt => github.com/bketelsen/crypt v0.0.5
 	github.com/dgrijalva/jwt-go => github.com/dgrijalva/jwt-go/v4 v4.0.0-preview1
-	github.com/go-logr/logr => github.com/go-logr/logr v1.2.3
+	github.com/go-logr/logr => github.com/go-logr/logr v1.2.4
 	github.com/gogo/protobuf v1.3.1 => github.com/gogo/protobuf v1.3.2
 	github.com/gorilla/websocket v1.4.0 => github.com/gorilla/websocket v1.4.2
-	github.com/spf13/viper => github.com/spf13/viper v1.13.0
+	github.com/spf13/viper => github.com/spf13/viper v1.16.0
 	k8s.io/klog/v2 v2.2.0 => k8s.io/klog/v2 v2.0.0
 )
