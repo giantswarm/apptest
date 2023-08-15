@@ -84,7 +84,8 @@ run: ## Runs go run main.go.
 .PHONY: clean
 clean: ## Cleans the binary.
 	@echo "====> $@"
-	rm -f $(APPLICATION)*
+	rm -f $(APPLICATION)
+	rm -f $(APPLICATION)-*
 	go clean
 
 .PHONY: imports
