@@ -1,4 +1,5 @@
-[![GoDoc](https://godoc.org/github.com/giantswarm/apptest?status.svg)](http://godoc.org/github.com/giantswarm/apptest) [![CircleCI](https://circleci.com/gh/giantswarm/apptest.svg?&style=shield)](https://circleci.com/gh/giantswarm/apptest)
+[![Go Reference](https://pkg.go.dev/badge/github.com/giantswarm/apptest.svg)](https://pkg.go.dev/github.com/giantswarm/apptest)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/giantswarm/apptest/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/giantswarm/apptest/tree/main)
 
 # apptest
 
