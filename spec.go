@@ -41,6 +41,7 @@ type App struct {
 	AppOperatorVersion string
 	CatalogName        string
 	CatalogURL         string
+	ClusterID          string
 	KubeConfig         string
 	Name               string
 	Namespace          string
