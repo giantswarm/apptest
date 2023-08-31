@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - PSP CR installation put under global scope
+- Place KubeConfig under the `value` key in the secret in addition.
 
 ## [1.3.0] - 2023-11-10
 

@@ -482,6 +482,7 @@ func (a *AppSetup) createKubeConfigSecret(ctx context.Context, name, namespace, 
 
 	data := map[string][]byte{
 		"kubeConfig": []byte(kubeConfig),
+		"value":      []byte(kubeConfig),
 	}
 	desired := &corev1.Secret{
 		Data: data,
