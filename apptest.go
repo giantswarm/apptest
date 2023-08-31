@@ -394,14 +394,22 @@ func (a *AppSetup) createApps(ctx context.Context, apps []App) error {
 				return microerror.Mask(err)
 			}
 		}
+
+		labels := map[string]string{
+			label.AppKubernetesName: app.Name,
+		}
+
+		if app.ClusterID != "" {
+			labels[label.Cluster] = app.ClusterID
+		} else {
+			labels[label.AppOperatorVersion] = appOperatorVersion
+		}
+
 		appCR := &v1alpha1.App{
 			ObjectMeta: metav1.ObjectMeta{
 				Name:      appCRName,
 				Namespace: appCRNamespace,
-				Labels: map[string]string{
-					label.AppOperatorVersion: appOperatorVersion,
-					label.AppKubernetesName:  app.Name,
-				},
+				Labels:    labels,
 			},
 			Spec: v1alpha1.AppSpec{
 				Catalog:    app.CatalogName,

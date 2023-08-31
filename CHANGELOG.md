@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add support for Cluster ID selector.
+
 ### Changed
 
 - PSP CR installation put under global scope
