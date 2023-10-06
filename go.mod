@@ -73,7 +73,7 @@ replace (
 	github.com/go-logr/logr => github.com/go-logr/logr v1.2.4
 	github.com/gogo/protobuf v1.3.1 => github.com/gogo/protobuf v1.3.2
 	github.com/gorilla/websocket v1.4.0 => github.com/gorilla/websocket v1.4.2
-	github.com/spf13/viper => github.com/spf13/viper v1.16.0
+	github.com/spf13/viper => github.com/spf13/viper v1.17.0
 	golang.org/x/net => golang.org/x/net v0.16.0
 	k8s.io/klog/v2 v2.2.0 => k8s.io/klog/v2 v2.0.0
 )
