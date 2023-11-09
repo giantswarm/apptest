@@ -7,10 +7,10 @@ require (
 	github.com/giantswarm/app/v6 v6.15.6
 	github.com/giantswarm/appcatalog v0.10.1
 	github.com/giantswarm/backoff v1.0.0
-	github.com/giantswarm/k8smetadata v0.22.0
+	github.com/giantswarm/k8smetadata v0.23.0
 	github.com/giantswarm/microerror v0.4.0
 	github.com/giantswarm/micrologger v1.0.0
-	github.com/giantswarm/silence-operator v0.10.2
+	github.com/giantswarm/silence-operator v0.11.1
 	k8s.io/api v0.26.0
 	k8s.io/apiextensions-apiserver v0.26.0
 	k8s.io/apimachinery v0.26.0
@@ -20,7 +20,7 @@ require (
 
 require (
 	github.com/cenkalti/backoff/v4 v4.1.3 // indirect
-	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/emicklei/go-restful/v3 v3.9.0 // indirect
 	github.com/evanphx/json-patch/v5 v5.6.0 // indirect
 	github.com/giantswarm/to v0.4.0 // indirect
@@ -34,7 +34,7 @@ require (
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/gnostic v0.5.7-v3refs // indirect
-	github.com/google/go-cmp v0.5.9 // indirect
+	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/go-github/v49 v49.1.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/gofuzz v1.1.0 // indirect
@@ -47,12 +47,12 @@ require (
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	golang.org/x/crypto v0.14.0 // indirect
-	golang.org/x/net v0.14.0 // indirect
-	golang.org/x/oauth2 v0.11.0 // indirect
-	golang.org/x/sys v0.13.0 // indirect
-	golang.org/x/term v0.13.0 // indirect
-	golang.org/x/text v0.13.0 // indirect
+	golang.org/x/crypto v0.15.0 // indirect
+	golang.org/x/net v0.15.0 // indirect
+	golang.org/x/oauth2 v0.12.0 // indirect
+	golang.org/x/sys v0.14.0 // indirect
+	golang.org/x/term v0.14.0 // indirect
+	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
@@ -70,10 +70,10 @@ require (
 replace (
 	github.com/bketelsen/crypt => github.com/bketelsen/crypt v0.0.5
 	github.com/dgrijalva/jwt-go => github.com/dgrijalva/jwt-go/v4 v4.0.0-preview1
-	github.com/go-logr/logr => github.com/go-logr/logr v1.2.4
+	github.com/go-logr/logr => github.com/go-logr/logr v1.3.0
 	github.com/gogo/protobuf v1.3.1 => github.com/gogo/protobuf v1.3.2
 	github.com/gorilla/websocket v1.4.0 => github.com/gorilla/websocket v1.4.2
 	github.com/spf13/viper => github.com/spf13/viper v1.17.0
-	golang.org/x/net => golang.org/x/net v0.17.0
+	golang.org/x/net => golang.org/x/net v0.18.0
 	k8s.io/klog/v2 v2.2.0 => k8s.io/klog/v2 v2.0.0
 )
