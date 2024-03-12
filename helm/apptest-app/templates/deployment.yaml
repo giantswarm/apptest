@@ -17,11 +17,15 @@ spec:
         app: {{ .Values.name }}
         giantswarm.io/service-type: "managed"
     spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
       - name: {{ .Values.name }}
         image: "{{ .Values.image.registry }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
         args:
         - '--port={{ .Values.port }}'
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
         livenessProbe:
           httpGet:
             path: /healthz
