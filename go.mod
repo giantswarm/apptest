@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/giantswarm/apiextensions-application v0.6.0
 	github.com/giantswarm/app/v7 v7.0.0
-	github.com/giantswarm/appcatalog v0.10.1
+	github.com/giantswarm/appcatalog v1.0.0
 	github.com/giantswarm/backoff v1.0.0
 	github.com/giantswarm/k8smetadata v0.23.0
 	github.com/giantswarm/microerror v0.4.1
@@ -64,7 +64,7 @@ require (
 	k8s.io/utils v0.0.0-20221128185143-99ec85e7a448 // indirect
 	sigs.k8s.io/json v0.0.0-20220713155537-f223a00ba0e2 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
-	sigs.k8s.io/yaml v1.3.0 // indirect
+	sigs.k8s.io/yaml v1.4.0 // indirect
 )
 
 replace (
