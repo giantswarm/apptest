@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Update `controller-runtime` to `v0.16.3` to match other packages.
+
 ## [1.3.1] - 2024-04-25
 
 ### Added
