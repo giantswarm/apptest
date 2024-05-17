@@ -142,7 +142,12 @@ func New(config Config) (*AppSetup, error) {
 		// we want to separate client and manager. Thus we configure the client here
 		// properly on our own instead of relying on the manager to provide a
 		// client, which might change in the future.
-		mapper, err := apiutil.NewDynamicRESTMapper(rest.CopyConfig(restConfig))
+		httpClient, err := rest.HTTPClientFor(rest.CopyConfig(restConfig))
+		if err != nil {
+			return nil, microerror.Mask(err)
+		}
+
+		mapper, err := apiutil.NewDynamicRESTMapper(rest.CopyConfig(restConfig), httpClient)
 		if err != nil {
 			return nil, microerror.Mask(err)
 		}
