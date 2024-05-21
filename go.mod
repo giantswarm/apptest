@@ -70,7 +70,7 @@ require (
 )
 
 replace (
-	github.com/go-logr/logr => github.com/go-logr/logr v1.4.1
+	github.com/go-logr/logr => github.com/go-logr/logr v1.4.2
 	golang.org/x/net => golang.org/x/net v0.25.0
 )
 
