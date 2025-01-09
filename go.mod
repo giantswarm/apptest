@@ -11,7 +11,7 @@ require (
 	github.com/giantswarm/backoff v1.0.1
 	github.com/giantswarm/k8smetadata v0.25.0
 	github.com/giantswarm/microerror v0.4.1
-	github.com/giantswarm/micrologger v1.1.1
+	github.com/giantswarm/micrologger v1.1.2
 	github.com/giantswarm/silence-operator v0.12.0
 	k8s.io/api v0.32.0
 	k8s.io/apiextensions-apiserver v0.32.0
