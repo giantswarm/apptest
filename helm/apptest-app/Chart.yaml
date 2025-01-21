@@ -3,4 +3,7 @@ appVersion: v1.8.0
 description: A test app for the apptest library
 home: https://github.com/giantswarm/apptest
 name: apptest-app
-version: [[ .Version ]]
+version: 0.0.1-dev
+icon: https://s.giantswarm.io/app-icons/giantswarm/1/dark.svg
+annotations:
+  application.giantswarm.io/team: honeybadger
