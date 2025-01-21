@@ -21,10 +21,8 @@ workflows:
           app_catalog_test: "control-plane-test-catalog"
           chart: "apptest-app"
           filters:
-            # Do not trigger the job on merge to master.
             branches:
-              ignore:
-                - master
+              only: /.*/
           requires:
             - go-test
 
@@ -33,10 +31,8 @@ workflows:
           install-app-platform: true
           test-dir: "integration/test/basic"
           filters:
-            # Do not trigger the job on merge to master.
             branches:
-              ignore:
-                - master
+              only: /.*/
           requires:
             - push-apptest-app-to-control-plane-test-catalog
 
@@ -45,10 +41,8 @@ workflows:
           install-app-platform: true
           test-dir: "integration/test/ensurecrds"
           filters:
-            # Do not trigger the job on merge to master.
             branches:
-              ignore:
-                - master
+              only: /.*/
           requires:
             - push-apptest-app-to-control-plane-test-catalog
 
@@ -57,9 +51,7 @@ workflows:
           install-app-platform: true
           test-dir: "integration/test/externalcatalog"
           filters:
-            # Do not trigger the job on merge to master.
             branches:
-              ignore:
-                - master
+              only: /.*/
           requires:
             - push-apptest-app-to-control-plane-test-catalog
