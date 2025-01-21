@@ -20,6 +20,7 @@ workflows:
           app_catalog: "control-plane-test-catalog"
           app_catalog_test: "control-plane-test-catalog"
           chart: "apptest-app"
+          chart_dir: "helm/apptest-app"
           filters:
             branches:
               only: /.*/
