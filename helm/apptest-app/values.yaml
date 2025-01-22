@@ -1,4 +1,5 @@
 name: apptest-app
+serviceType: managed
 namespace: kube-system
 port: 10301
 portName: metrics

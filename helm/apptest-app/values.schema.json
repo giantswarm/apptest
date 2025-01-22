@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the app"
+    },
+    "namespace": {
+      "type": "string",
+      "description": "Namespace where the app will be installed"
+    },
+    "port": {
+      "type": "integer",
+      "description": "Port number for metrics"
+    },
+    "portName": {
+      "type": "string",
+      "description": "Name of the port"
+    },
+    "replicas": {
+      "type": "integer",
+      "description": "Number of replicas"
+    },
+    "image": {
+      "type": "object",
+      "properties": {
+        "registry": {
+          "type": "string",
+          "description": "Container image registry"
+        },
+        "name": {
+          "type": "string",
+          "description": "Container image name"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Container image tag"
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "properties": {
+        "limits": {
+          "type": "object",
+          "properties": {
+            "cpu": {
+              "type": "string",
+              "description": "CPU limit"
+            },
+            "memory": {
+              "type": "string",
+              "description": "Memory limit"
+            }
+          }
+        },
+        "requests": {
+          "type": "object",
+          "properties": {
+            "cpu": {
+              "type": "string",
+              "description": "CPU request"
+            },
+            "memory": {
+              "type": "string",
+              "description": "Memory request"
+            }
+          }
+        }
+      }
+    },
+    "podSecurityStandards": {
+      "type": "object",
+      "properties": {
+        "enforced": {
+          "type": "boolean",
+          "description": "Whether pod security standards are enforced"
+        }
+      }
+    }
+  },
+  "required": ["name", "namespace", "port", "portName"]
+}
