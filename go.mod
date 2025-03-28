@@ -71,7 +71,7 @@ require (
 
 replace (
 	github.com/go-logr/logr => github.com/go-logr/logr v1.4.2
-	golang.org/x/net => golang.org/x/net v0.37.0
+	golang.org/x/net => golang.org/x/net v0.38.0
 )
 
 replace google.golang.org/protobuf v1.31.0 => google.golang.org/protobuf v1.33.0
