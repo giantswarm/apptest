@@ -18,6 +18,3 @@ resources:
   requests:
     cpu: 100m
     memory: 300Mi
-
-podSecurityStandards:
-  enforced: false
