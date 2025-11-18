@@ -64,16 +64,6 @@ rules:
   verbs:
   - list
   - watch
-{{- if not .Values.podSecurityStandards.enforced }}
-- apiGroups:
-  - extensions
-  resources:
-  - podsecuritypolicies
-  verbs:
-  - use
-  resourceNames:
-  - {{ .Values.name }}
-{{- end }}
 - apiGroups:
   - autoscaling
   attributeRestrictions: null
