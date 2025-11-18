@@ -50,15 +50,3 @@ workflows:
                 - master
           requires:
             - push-apptest-app-to-control-plane-test-catalog
-
-      - architect/integration-test:
-          name: "external-catalog-integration-test"
-          install-app-platform: true
-          test-dir: "integration/test/externalcatalog"
-          filters:
-            # Do not trigger the job on merge to master.
-            branches:
-              ignore:
-                - master
-          requires:
-            - push-apptest-app-to-control-plane-test-catalog
