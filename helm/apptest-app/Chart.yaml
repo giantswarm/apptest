@@ -1,6 +1,9 @@
 apiVersion: v1
-appVersion: v1.8.0
+appVersion: v1.9.2
 description: A test app for the apptest library
-home: https://github.com/giantswarm/apptest
+annotations:
+  io.giantswarm.application.team: honeybadger
 name: apptest-app
-version: [[ .Version ]]
+home: https://github.com/giantswarm/apptest
+icon: https://s.giantswarm.io/app-icons/giantswarm/1/dark.svg
+version: 1.4.2-dev
