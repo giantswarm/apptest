@@ -15,6 +15,7 @@ workflows:
 
       - architect/push-to-app-catalog:
           context: "architect"
+          executor: app-build-suite
           name: push-apptest-app-to-control-plane-test-catalog
           app_catalog: "control-plane-test-catalog"
           app_catalog_test: "control-plane-test-catalog"
