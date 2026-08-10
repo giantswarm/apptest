@@ -73,3 +73,7 @@ replace (
 )
 
 replace google.golang.org/protobuf v1.31.0 => google.golang.org/protobuf v1.33.0
+
+replace go.opentelemetry.io/otel/sdk v1.40.0 => go.opentelemetry.io/otel/sdk v1.45.0
+
+replace golang.org/x/crypto v0.50.0 => golang.org/x/crypto v0.54.0
