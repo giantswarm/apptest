@@ -18,14 +18,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Bump `appcatalog` to v1.0.2 so chart lookups resolve against charts published with an abbreviated
-  SHA. `InstallApps` passes `App.SHA` straight through to `appcatalog.GetLatestVersion`, and appcatalog
-  matched the index entry with `strings.HasSuffix(entry.Version, appVersion)`. That worked while
-  architect published charts as `<version>-<full 40 character SHA>`, but since the architect orb bump
-  to 9.x the published format is the gitsemver development version, whose trailing SHA is abbreviated
-  to seven characters. A full SHA can never match that by suffix, so callers passing `CIRCLE_SHA1`
-  failed with `no app ... in index.yaml with given appVersion` even though the chart was published
-  correctly. Callers passing `App.Version` were never affected. appcatalog v1.0.2 accepts both formats.
+- Wait for a deployed app using `appcatalog.MatchesVersion` instead of a plain suffix test, and bump
+  `appcatalog` to v1.1.0. Both the chart lookup and this wait assumed architect's old
+  `<version>-<full 40 character SHA>` format. Since architect orb 9.x the published format is the
+  gitsemver development version, e.g. `1.4.2-dev.my-branch.2026-08-19.15-42-45.hb1fae9f`, whose
+  trailing SHA is abbreviated to seven characters -- so `strings.HasSuffix(app.Status.Version,
+  testApp.SHA)` could never be true and `waitForDeployedApp` spun until the caller's test timed out:
+
+      waiting for version contains `b1fae9f6112917bc5d936661f533610b52d2d19f`,
+      current version `1.4.2-dev.bump-appcatalog-1-0-2.2026-08-19.15-42-45.hb1fae9f`
+
+  appcatalog v1.0.2 fixed the lookup half; v1.1.0 exports the same matcher so this half uses one shared
+  implementation rather than a second copy of the rule. Callers passing `App.Version` rather than
+  `App.SHA` were never affected and are unchanged.
 
 ## [1.4.1] - 2024-06-04
 
