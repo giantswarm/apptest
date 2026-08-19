@@ -16,6 +16,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `external-dns-app` and `kyverno-policies-dx`.
 - Migrate build system to ABS.
 
+### Fixed
+
+- Bump `appcatalog` to v1.0.2 so chart lookups resolve against charts published with an abbreviated
+  SHA. `InstallApps` passes `App.SHA` straight through to `appcatalog.GetLatestVersion`, and appcatalog
+  matched the index entry with `strings.HasSuffix(entry.Version, appVersion)`. That worked while
+  architect published charts as `<version>-<full 40 character SHA>`, but since the architect orb bump
+  to 9.x the published format is the gitsemver development version, whose trailing SHA is abbreviated
+  to seven characters. A full SHA can never match that by suffix, so callers passing `CIRCLE_SHA1`
+  failed with `no app ... in index.yaml with given appVersion` even though the chart was published
+  correctly. Callers passing `App.Version` were never affected. appcatalog v1.0.2 accepts both formats.
+
 ## [1.4.1] - 2024-06-04
 
 ### Changed
