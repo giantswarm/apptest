@@ -7,7 +7,7 @@ toolchain go1.26.4
 require (
 	github.com/giantswarm/apiextensions-application v0.6.2
 	github.com/giantswarm/app/v7 v7.1.0
-	github.com/giantswarm/appcatalog v1.0.1
+	github.com/giantswarm/appcatalog v1.1.0
 	github.com/giantswarm/backoff v1.0.1
 	github.com/giantswarm/k8smetadata v0.26.0
 	github.com/giantswarm/microerror v0.4.1
@@ -68,7 +68,7 @@ require (
 )
 
 replace (
-	github.com/go-logr/logr => github.com/go-logr/logr v1.4.3
+	github.com/go-logr/logr => github.com/go-logr/logr v1.4.4
 	golang.org/x/net => golang.org/x/net v0.53.0
 )
 

@@ -9,7 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Bump the `architect` CircleCI orb from 6.15.0 to 9.6.0. The 6.x `push-to-app-catalog` job still
+  authenticates to `giantswarmpublic.azurecr.io`, which no longer resolves (NXDOMAIN), so the chart
+  push fails on every build. That step was deprecated in orb 6.8.0 when chart pushes moved to
+  `gsoci`, and is absent from 9.x. 9.6.0 is the version already running in `coredns-app`,
+  `external-dns-app` and `kyverno-policies-dx`.
 - Migrate build system to ABS.
+
+### Fixed
+
+- Wait for a deployed app using `appcatalog.MatchesVersion` instead of a plain suffix test, and bump
+  `appcatalog` to v1.1.0. Both the chart lookup and this wait assumed architect's old
+  `<version>-<full 40 character SHA>` format. Since architect orb 9.x the published format is the
+  gitsemver development version, e.g. `1.4.2-dev.my-branch.2026-08-19.15-42-45.hb1fae9f`, whose
+  trailing SHA is abbreviated to seven characters -- so `strings.HasSuffix(app.Status.Version,
+  testApp.SHA)` could never be true and `waitForDeployedApp` spun until the caller's test timed out:
+
+      waiting for version contains `b1fae9f6112917bc5d936661f533610b52d2d19f`,
+      current version `1.4.2-dev.bump-appcatalog-1-0-2.2026-08-19.15-42-45.hb1fae9f`
+
+  appcatalog v1.0.2 fixed the lookup half; v1.1.0 exports the same matcher so this half uses one shared
+  implementation rather than a second copy of the rule. Callers passing `App.Version` rather than
+  `App.SHA` were never affected and are unchanged.
 
 ## [1.4.1] - 2024-06-04
 
