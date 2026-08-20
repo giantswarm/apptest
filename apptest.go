@@ -3,7 +3,6 @@ package apptest
 import (
 	"context"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/giantswarm/apiextensions-application/api/v1alpha1"
@@ -727,7 +726,11 @@ func (a *AppSetup) waitForDeployedApp(ctx context.Context, testApp App) error {
 		case notInstalledStatus, failedStatus:
 			return backoff.Permanent(microerror.Maskf(executionFailedError, "status %#q, reason: %s", app.Status.Release.Status, app.Status.Release.Reason))
 		case deployedStatus:
-			if testApp.SHA != "" && strings.HasSuffix(app.Status.Version, testApp.SHA) {
+			// appcatalog.MatchesVersion rather than a plain suffix test: architect orb 9.x
+			// publishes development versions whose trailing SHA is abbreviated to seven
+			// characters, e.g. "1.4.2-dev.my-branch.2026-08-19.15-42-45.hb1fae9f", so a full
+			// SHA can never be a suffix of the deployed version and this wait never returned.
+			if testApp.SHA != "" && appcatalog.MatchesVersion(app.Status.Version, testApp.SHA) {
 				return nil
 			}
 
