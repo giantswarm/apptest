@@ -18,6 +18,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Trim a trailing `.` as well as `-` from the `helm.sh/chart` label in the test chart. The label is
+  built as `printf "%s-%s" .Chart.Name .Chart.Version | trunc 63 | trimSuffix "-"`. Since architect
+  orb 9.x, `.Chart.Version` is the gitsemver development version, which `gitsemver` caps at 63
+  characters; prefixing `apptest-app-` pushes it past the 63-character label limit, so `trunc` now
+  cuts mid-version. `trimSuffix "-"` handles a cut landing on a dash but not on a dot, and a label
+  may not end in `.`, so the render was rejected outright:
+
+      Deployment.apps "apptest-app" is invalid: metadata.labels: Invalid value:
+      "apptest-app-1.4.2-dev.renovate-k8s-modules.2026-08-20.13-16-19.": a valid label must ...
+      start and end with an alphanumeric character
+
+  Which character the cut lands on is fixed by the length of the branch name, so this is
+  deterministic per branch rather than flaky -- `renovate/k8s-modules` always cuts on the dot before
+  the abbreviated SHA and always fails, while `renovate/architect-10.x` always cuts on a dash inside
+  the timestamp and always passes. `trimAll "-._"` covers every separator the version can end on.
+
 - Wait for a deployed app using `appcatalog.MatchesVersion` instead of a plain suffix test, and bump
   `appcatalog` to v1.1.0. Both the chart lookup and this wait assumed architect's old
   `<version>-<full 40 character SHA>` format. Since architect orb 9.x the published format is the
