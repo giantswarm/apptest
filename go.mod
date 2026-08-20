@@ -6,7 +6,7 @@ toolchain go1.26.4
 
 require (
 	github.com/giantswarm/apiextensions-application v0.6.2
-	github.com/giantswarm/app/v7 v7.1.0
+	github.com/giantswarm/app/v8 v8.1.1
 	github.com/giantswarm/appcatalog v1.1.0
 	github.com/giantswarm/backoff/v2 v2.0.0
 	github.com/giantswarm/k8smetadata v0.26.0
@@ -46,7 +46,7 @@ require (
 	github.com/go-openapi/swag/yamlutils v0.28.0 // indirect
 	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/google/gnostic-models v0.7.1 // indirect
-	github.com/google/go-github/v69 v69.2.0 // indirect
+	github.com/google/go-github/v82 v82.0.0 // indirect
 	github.com/google/go-querystring v1.2.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
