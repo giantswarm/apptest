@@ -10,3 +10,5 @@ CVE-2026-39824 until=2026-09-09 # golang.org/x/sys@v0.43.0
 CVE-2026-56852 until=2026-09-09 # golang.org/x/text@v0.36.0
 CVE-2026-56864 until=2026-09-27 # golang.org/x/mod@v0.38.0
 CVE-2026-56865 until=2026-09-27 # golang.org/x/mod@v0.38.0
+CVE-2026-84304 until=2026-10-03 # google.golang.org/grpc@v1.83.0
+CVE-2026-84303 until=2026-10-03 # google.golang.org/grpc@v1.83.0
