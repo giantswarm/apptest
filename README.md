@@ -172,8 +172,6 @@ if err != nil {
 A list of known Giant Swarm catalogs is maintained in apptest to avoid needing
 to set the catalog URL. But installing from external catalogs is also possible.
 
-Test: [external-catalog-test]
-
 ```go
 {
   apps := []apptest.App{
@@ -202,6 +200,5 @@ Test: [external-catalog-test]
 [integration-test-job]: https://github.com/giantswarm/architect-orb/blob/master/docs/job/integration-test.md
 [kind]: https://kind.sigs.k8s.io/
 
-[basic-test]: https://github.com/giantswarm/apptest/tree/master/integration/test/basic/basic.go
-[ensure-crds-test]: https://github.com/giantswarm/apptest/tree/master/integration/test/ensurecrds/ensure_crds.go
-[external-catalog-test]: https://github.com/giantswarm/apptest/tree/master/integration/test/externalcatalog/external_catalog.go
+[basic-test]: https://github.com/giantswarm/apptest/tree/main/integration/test/basic/basic_test.go
+[ensure-crds-test]: https://github.com/giantswarm/apptest/tree/main/integration/test/ensurecrds/ensure_crds_test.go
