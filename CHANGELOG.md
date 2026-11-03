@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Bump `github.com/giantswarm/appcatalog` from v1.1.0 to v1.1.1, so a commit SHA also matches charts
+  versioned with the gitsemver v3 schema `<version>-r<crc32>t<YYYYMMDDHHMMSS>h<short SHA>`, which
+  architect orb 10.8.0 and later publish. With v1.1.0, `InstallApps` and `UpgradeApp` failed with
+  `no app ... in index.yaml with given appVersion` for such charts, and the deployed-version wait
+  would never succeed.
 - Trim a trailing `.` as well as `-` from the `helm.sh/chart` label in the test chart. The label is
   built as `printf "%s-%s" .Chart.Name .Chart.Version | trunc 63 | trimSuffix "-"`. Since architect
   orb 9.x, `.Chart.Version` is the gitsemver development version, which `gitsemver` caps at 63

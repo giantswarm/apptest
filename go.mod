@@ -7,7 +7,7 @@ toolchain go1.27.3
 require (
 	github.com/giantswarm/apiextensions-application v0.6.2
 	github.com/giantswarm/app/v8 v8.1.1
-	github.com/giantswarm/appcatalog v1.1.0
+	github.com/giantswarm/appcatalog v1.1.1
 	github.com/giantswarm/backoff/v2 v2.0.0
 	github.com/giantswarm/k8smetadata v0.26.0
 	github.com/giantswarm/microerror v0.4.1
