@@ -7,16 +7,16 @@ toolchain go1.27.3
 require (
 	github.com/giantswarm/apiextensions-application v0.6.2
 	github.com/giantswarm/app/v8 v8.1.1
-	github.com/giantswarm/appcatalog v1.1.0
+	github.com/giantswarm/appcatalog v1.1.1
 	github.com/giantswarm/backoff/v2 v2.0.0
 	github.com/giantswarm/k8smetadata v0.26.0
 	github.com/giantswarm/microerror v0.4.1
 	github.com/giantswarm/micrologger v1.1.2
 	github.com/giantswarm/silence-operator v0.21.1
-	k8s.io/api v0.37.1
-	k8s.io/apiextensions-apiserver v0.37.1
-	k8s.io/apimachinery v0.37.1
-	k8s.io/client-go v0.37.1
+	k8s.io/api v0.37.2
+	k8s.io/apiextensions-apiserver v0.37.2
+	k8s.io/apimachinery v0.37.2
+	k8s.io/client-go v0.37.2
 	sigs.k8s.io/controller-runtime v0.25.2
 )
 
