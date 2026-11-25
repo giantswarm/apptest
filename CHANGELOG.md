@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `gsoci`, and is absent from 9.x. 9.6.0 is the version already running in `coredns-app`,
   `external-dns-app` and `kyverno-policies-dx`.
 - Migrate build system to ABS.
+- Update golang.org/x/net to v0.62.0 (giantswarm/apptest#529)
 
 ### Fixed
 
