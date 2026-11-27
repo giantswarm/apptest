@@ -30,8 +30,8 @@ github.com/giantswarm/microerror v0.4.1 h1:WMiD7HQASoUA9lZzPlPK+erCEOJ0uT4cyo18V
 github.com/giantswarm/microerror v0.4.1/go.mod h1:URFj0gFCmZihjya6saQCXxslBrgctXb4NsXYHB5JdrI=
 github.com/giantswarm/micrologger v1.1.2 h1:dNmnGZgAT0rnZkpc2ivj1shJ3Stnnjsy7jIi84//Jqc=
 github.com/giantswarm/micrologger v1.1.2/go.mod h1:lJe2gBm3O3miycXjWOgDh6vVuaKCACsPjBcobc0dvPM=
-github.com/giantswarm/silence-operator v0.21.1 h1:j9zXLgC8WtrNq1G3so1BRE5z9Mh0Dx28fDnCZSummCs=
-github.com/giantswarm/silence-operator v0.21.1/go.mod h1:Ukho0pfP/5cTHeh2We8UEnY9yGbN3sEYjy9zejZqSw0=
+github.com/giantswarm/silence-operator v0.22.0 h1:yIGCPk4RTCVs+k8rqrzuLL05W+9lBOUwEsFkY8Pw6Gw=
+github.com/giantswarm/silence-operator v0.22.0/go.mod h1:QgCWbJOrhkc5EwqY2pgp9BWAezshsDZhFfS5sythJV0=
 github.com/giantswarm/to v0.4.2 h1:s2jS708yNKiyVFqzS5yyJeoVyhvMX19fTZD8OymJY9U=
 github.com/giantswarm/to v0.4.2/go.mod h1:RTRtw+Dyk6YqoiNBOGLO981BqhibtVwogdaFIMO1y/A=
 github.com/go-kit/log v0.2.1 h1:MRVx0/zhvdseW+Gza6N9rVzU/IVzaeE1SFI4raAhmBU=
@@ -104,8 +104,8 @@ github.com/modern-go/reflect2 v1.0.3-0.20250322232337-35a7c28c31ee h1:W5t00kpgFd
 github.com/modern-go/reflect2 v1.0.3-0.20250322232337-35a7c28c31ee/go.mod h1:yWuevngMOJpCy52FWWMvUC8ws7m/LJsjYzDa0/r8luk=
 github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 h1:C3w9PqII01/Oq1c1nUAm88MOHcQC9l5mIlSMApZMrHA=
 github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822/go.mod h1:+n7T8mK8HuQTcFwEeznm/DIxMOiR9yIdICNftLE1DvQ=
-github.com/onsi/ginkgo/v2 v2.33.1 h1:62XfWJbEIjPSCSDYrsCPP/SHcmH7O0M8ne8zfqQ2iz4=
-github.com/onsi/ginkgo/v2 v2.33.1/go.mod h1:+aXOY+vzZ5mu2iI2HpTZUPmM//oQfsNFX6gU9kNcA44=
+github.com/onsi/ginkgo/v2 v2.34.0 h1:aN3Us823mHHTSWMIi8WIQTdYuSPhl2lWY46E/w3SiAk=
+github.com/onsi/ginkgo/v2 v2.34.0/go.mod h1:+aXOY+vzZ5mu2iI2HpTZUPmM//oQfsNFX6gU9kNcA44=
 github.com/onsi/gomega v1.44.0 h1:eAiGl3Pw5jz5GQdDff0BcxYpAX1JxW8xD7mFUuwNfZQ=
 github.com/onsi/gomega v1.44.0/go.mod h1:e/C2HwaZ1DhvjzXXuFhcR7hY7Sh9pl7MmoWKEjzwcdA=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
